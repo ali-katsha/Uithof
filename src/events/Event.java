@@ -1,8 +1,12 @@
 package events;
 
+import entities.Stop;
 import entities.Tram;
+import generators.DrivingTimeGenerator;
 
 import java.time.LocalTime;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Event {
 
@@ -23,21 +27,28 @@ public class Event {
         this.tram = tram;
     }
 
-    void eventHandler(){
+    PriorityQueue<Event>  eventHandler(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
         switch (eventType) {
             case 1:
-                eventHandlerArrivingStop();
+                eventHandlerArrivingStop(eventQueue,routeCSPNR,routePNRCS);
             case 2:
-                eventHandlerDepartureStop();
+                eventHandlerDepartureStop( eventQueue,routeCSPNR,routePNRCS);
         }
     }
 
-    void eventHandlerArrivingStop(){
+    PriorityQueue<Event>  eventHandlerArrivingStop(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
 
     }
 
-    void eventHandlerDepartureStop(){
+    PriorityQueue<Event>  eventHandlerDepartureStop(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
 
+        long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
+
+        Event arrivingEvent = new Event(1,eventTime.plusSeconds(drivingTime),this.tram);
+
+
+        eventQueue.add(arrivingEvent);
+        return eventQueue;
     }
 
 
@@ -64,4 +75,14 @@ public class Event {
     public void setTram(Tram tram) {
         this.tram = tram;
     }
+
+    private Stop getNextStop(Stop stop ,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
+        if (stop.getStopNumber() <9){
+            return routeCSPNR.get(stop.getStopNumber());
+        }else if  (stop.getStopNumber() <16){
+            return routePNRCS.get(stop.getStopNumber()-8);
+        }
+
+    }
+
 }
