@@ -1,6 +1,7 @@
 import entities.EndStop;
 import entities.Stop;
 import events.Event;
+import generators.PassengersArrivingGenerator;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
 
-        LocalTime simulationClock= new LocalTime(6,0, 0 , 0 );
+        //LocalTime simulationClock= new LocalTime(6,0, 0 , 0 );
 
 
         int maxWaitingTime;
@@ -40,8 +41,9 @@ public class Main {
         List<Stop> routePNRCS = new ArrayList<Stop>();
         List<Stop> routeCSPNR = new ArrayList<Stop>();
 
-
-
+        // Poisson generator test
+        PassengersArrivingGenerator test = new PassengersArrivingGenerator();
+        System.out.println(test.getNumPassengers(302.91,73000));
 
     }
 }

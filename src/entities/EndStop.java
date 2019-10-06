@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EndStop {
 
-    EndStop(String name){
+    public EndStop(String name){
         this.name = name;
 
     }
