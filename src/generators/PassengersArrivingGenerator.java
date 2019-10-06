@@ -17,14 +17,22 @@ public class PassengersArrivingGenerator {
 
     public int getNumPassengers(Stop stop, LocalTime time, String inOut) throws IOException {
         double mean = getStopMean(stop, inOut)[getTimePeriod2(time)];
-          double L = Math.exp(-mean);
         double p = 1.0;
         int k = 0;
-
+        int step = 600;
         do {
             k++;
             p *= Math.random();
-        } while (p > L);
+            while (p < 1 && mean > 0){
+                if (mean > step){
+                    p *= Math.exp(step);
+                    mean -= step;
+                } else {
+                    p *= Math.exp(mean);
+                    mean = 0;
+                }
+            }
+        } while (p > 1);
 
         return (k - 1)/getDenominator(time);
 

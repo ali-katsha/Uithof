@@ -92,7 +92,11 @@ public class Main {
 
         // Testing
         PassengersArrivingGenerator p = new PassengersArrivingGenerator();
+        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(6,15,0),"in"));
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(7,15,0),"in"));
+        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(9,15,0),"in"));
+        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(16,15,0),"in"));
+        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(18,15,0),"in"));
 
     }
 }
