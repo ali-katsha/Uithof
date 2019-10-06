@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Queue;
 
 public class Stop {
-
-    public Stop(String name, int direction) {
+    public Stop(String name, int direction,int stopNumber) {
 
         this.name = name;
         this.direction = direction;
+        this.stopNumber = stopNumber;
 
         isBusy = false;
         passengerQueue = new Queue<Passenger>() {
@@ -110,10 +110,12 @@ public class Stop {
         numWaitPassenger=0;
     }
 
-    public Stop(String name) {
+
+    public Stop(String name,int stopNumber) {
 
         this.name = name;
         this.direction = 0;
+        this.stopNumber = stopNumber;
 
         isBusy = false;
         passengerQueue = new Queue<Passenger>() {
@@ -217,10 +219,12 @@ public class Stop {
     private boolean isBusy;
     private int direction; // 0 Station->pnr | 1 pnr-> station |
     Queue<Passenger> passengerQueue;
+    private int stopNumber;
 
 
     long maxWaitingTime;
     long totalWaitingTime;
+    long numWaitPassenger;
 
     public String getName() {
         return name;
@@ -278,8 +282,12 @@ public class Stop {
         this.numWaitPassenger = numWaitPassenger;
     }
 
-    long numWaitPassenger;
 
+    public int getStopNumber() {
+        return stopNumber;
+    }
 
-
+    public void setStopNumber(int stopNumber) {
+        this.stopNumber = stopNumber;
+    }
 }

@@ -19,8 +19,8 @@ public class EndStop extends Stop{
 
 
 
-    public EndStop(String name) {
-        super(name);
+    public EndStop(String name,int stopNumber) {
+        super(name,stopNumber);
     }
 
     public Switch getaSwitch() {

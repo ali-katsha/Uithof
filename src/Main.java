@@ -36,28 +36,28 @@ public class Main {
         // calculate timetable
 
 
-        EndStop PNRStop =  new EndStop("PNR");
-        EndStop CSStop =  new EndStop("CS");
+        EndStop CSStop =  new EndStop("CS",1);
 
 
 
-        Stop stopA1 = new Stop( "Vaartsche Rijn", 0 ) ;
-        Stop stopA2 = new Stop(  "Galgenwaard", 0 );
-        Stop stopA3 = new Stop(  "De Kromme Rijn", 0 );
-        Stop stopA4 = new Stop( "Padualaan", 0 ) ;
-        Stop stopA5 = new Stop(  "Heidelberglaan", 0 );
-        Stop stopA6 = new Stop( "UMC", 0 ) ;
-        Stop stopA7 = new Stop(  "WKZ", 0 );
+        Stop stopA1 = new Stop( "Vaartsche Rijn", 0,2 ) ;
+        Stop stopA2 = new Stop(  "Galgenwaard", 0 ,3);
+        Stop stopA3 = new Stop(  "De Kromme Rijn", 0 ,4);
+        Stop stopA4 = new Stop( "Padualaan", 0 ,5 ) ;
+        Stop stopA5 = new Stop(  "Heidelberglaan", 0 ,6);
+        Stop stopA6 = new Stop( "UMC", 0 ,7 ) ;
+        Stop stopA7 = new Stop(  "WKZ", 0 ,8 );
 
+        EndStop PNRStop =  new EndStop("PNR",9);
 
+        Stop stopB7 = new Stop( "Vaartsche Rijn", 0 ,16) ;
+        Stop stopB6 = new Stop(  "Galgenwaard", 0,15 );
+        Stop stopB5 = new Stop(  "De Kromme Rijn", 0 ,14);
+        Stop stopB4 = new Stop( "Padualaan", 0 ,13) ;
+        Stop stopB3 = new Stop(  "Heidelberglaan", 0 ,12);
+        Stop stopB2 = new Stop( "UMC", 0 ,11) ;
+        Stop stopB1 = new Stop(  "WKZ", 0 ,10);
 
-        Stop stopB7 = new Stop( "Vaartsche Rijn", 0 ) ;
-        Stop stopB6 = new Stop(  "Galgenwaard", 0 );
-        Stop stopB5 = new Stop(  "De Kromme Rijn", 0 );
-        Stop stopB4 = new Stop( "Padualaan", 0 ) ;
-        Stop stopB3 = new Stop(  "Heidelberglaan", 0 );
-        Stop stopB2 = new Stop( "UMC", 0 ) ;
-        Stop stopB1 = new Stop(  "WKZ", 0 );
 
 
         List<Stop> routeCSPNR = new ArrayList<Stop>();
