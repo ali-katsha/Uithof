@@ -1,7 +1,9 @@
 import entities.EndStop;
 import entities.Stop;
 import events.Event;
+import generators.PassengersArrivingGenerator;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.PriorityQueue;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 	// write your code here
 
 
@@ -50,13 +52,13 @@ public class Main {
 
         EndStop PNRStop =  new EndStop("PNR",9);
 
-        Stop stopB7 = new Stop( "Vaartsche Rijn", 0 ,16) ;
-        Stop stopB6 = new Stop(  "Galgenwaard", 0,15 );
-        Stop stopB5 = new Stop(  "De Kromme Rijn", 0 ,14);
-        Stop stopB4 = new Stop( "Padualaan", 0 ,13) ;
-        Stop stopB3 = new Stop(  "Heidelberglaan", 0 ,12);
-        Stop stopB2 = new Stop( "UMC", 0 ,11) ;
-        Stop stopB1 = new Stop(  "WKZ", 0 ,10);
+        Stop stopB7 = new Stop( "Vaartsche Rijn", 0 ,17) ;
+        Stop stopB6 = new Stop(  "Galgenwaard", 0,16 );
+        Stop stopB5 = new Stop(  "De Kromme Rijn", 0 ,15);
+        Stop stopB4 = new Stop( "Padualaan", 0 ,14) ;
+        Stop stopB3 = new Stop(  "Heidelberglaan", 0 ,13);
+        Stop stopB2 = new Stop( "UMC", 0 ,12) ;
+        Stop stopB1 = new Stop(  "WKZ", 0 ,11);
 
 
 
@@ -88,7 +90,9 @@ public class Main {
 
         PriorityQueue<Event> eventQueue = new PriorityQueue<Event>();
 
-
+        // Testing
+        PassengersArrivingGenerator p = new PassengersArrivingGenerator();
+        System.out.println(p.getNumPassengers(stopA1,71500,"in"));
 
 
 
