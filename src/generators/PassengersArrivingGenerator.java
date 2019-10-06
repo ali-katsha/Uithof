@@ -15,8 +15,8 @@ public class PassengersArrivingGenerator {
     public PassengersArrivingGenerator() {
     }
 
-    public int getNumPassengers(Stop stop, int time, String inOut) throws IOException {
-        double mean = getStopMean(stop, inOut)[getTimePeriod(time)-1];
+    public int getNumPassengers(Stop stop, LocalTime time, String inOut) throws IOException {
+        double mean = getStopMean(stop, inOut)[getTimePeriod2(time)];
           double L = Math.exp(-mean);
         double p = 1.0;
         int k = 0;
@@ -89,16 +89,33 @@ public class PassengersArrivingGenerator {
         }
     }
 
-    private int getDenominator(int time){
-        switch (getTimePeriod(time)){
-            case 1:
+    private int getTimePeriod2(LocalTime time){
+        if (time.isAfter(LocalTime.of(6,0,0)) && time.isBefore(LocalTime.of(7,0,1))){
+            return 0;
+        } else if (time.isAfter(LocalTime.of(7,0,0)) && time.isBefore(LocalTime.of(9,0,1))){
+            return 1;
+        } else if (time.isAfter(LocalTime.of(9,0,0)) && time.isBefore(LocalTime.of(16,0,1))){
+            return 2;
+        } else if (time.isAfter(LocalTime.of(16,0,0)) && time.isBefore(LocalTime.of(18,0,1))){
+            return 3;
+        } else if (time.isAfter(LocalTime.of(18,0,0))){
+            return 4;
+        } else {
+            return 5;
+        }
+
+    }
+
+    private int getDenominator(LocalTime time){
+        switch (getTimePeriod2(time)){
+            case 0:
                 return 4;
-            case 2:
-            case 4:
-                return 8;
+            case 1:
             case 3:
+                return 8;
+            case 2:
                 return 28;
-            case 5:
+            case 4:
                 return 14;
             default:
                 return 1;
