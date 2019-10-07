@@ -98,18 +98,16 @@ public class PassengersArrivingGenerator {
     }
 
     private int getTimePeriod2(LocalTime time){
-        if (time.isAfter(LocalTime.of(6,0,0)) && time.isBefore(LocalTime.of(7,0,1))){
+        if (time.isBefore(LocalTime.of(6,59,59))){
             return 0;
-        } else if (time.isAfter(LocalTime.of(7,0,0)) && time.isBefore(LocalTime.of(9,0,1))){
+        } else if (time.isAfter(LocalTime.of(6,59,59)) && time.isBefore(LocalTime.of(8,59,59))){
             return 1;
-        } else if (time.isAfter(LocalTime.of(9,0,0)) && time.isBefore(LocalTime.of(16,0,1))){
+        } else if (time.isAfter(LocalTime.of(8,59,59)) && time.isBefore(LocalTime.of(15,59,59))){
             return 2;
-        } else if (time.isAfter(LocalTime.of(16,0,0)) && time.isBefore(LocalTime.of(18,0,1))){
+        } else if (time.isAfter(LocalTime.of(15,59,59)) && time.isBefore(LocalTime.of(17,59,59))){
             return 3;
-        } else if (time.isAfter(LocalTime.of(18,0,0))){
-            return 4;
         } else {
-            return 5;
+            return 4;
         }
 
     }
