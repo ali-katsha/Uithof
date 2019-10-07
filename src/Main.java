@@ -1,13 +1,12 @@
 import entities.EndStop;
 import entities.Stop;
+import entities.Tram;
 import events.Event;
 import generators.PassengersArrivingGenerator;
 
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Main {
 
@@ -17,7 +16,7 @@ public class Main {
 
         LocalTime simulationClock = LocalTime.of(0, 0, 0);
         LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(21, 30, 0);
+        LocalTime simulationEndTime = LocalTime.of(6, 25, 0);
 
         long maxWaitingTime;
         long totalWaitingTime;
@@ -88,15 +87,42 @@ public class Main {
 
 
 
-        PriorityQueue<Event> eventQueue = new PriorityQueue<Event>();
+        Queue<Integer> q = new LinkedList<>();
+
+        // Adds elements {0, 1, 2, 3, 4} to queue
+        for (int i=0; i<5; i++)
+            q.add(i);
+
+        PriorityQueue<Event> eventQueue = new PriorityQueue<>();
+        Tram tram = new Tram();
+        tram.setCurrentStop(CSStop); tram.setNextStop(stopA1); tram.setTramNum(1);
+        Event departureEvent = new Event(2,simulationStartTime,tram);
+        CSStop.addTramtoWaitingTrams(tram);
+        eventQueue.add(departureEvent);
+
+        Queue<Tram> qq = new LinkedList<>();
+        qq.add(tram);
+
+
+        while (true){
+            Event event = eventQueue.remove();
+            eventQueue = event.eventHandler(eventQueue,routeCSPNR,routePNRCS);
+            if(event.getEventTime().isAfter(simulationEndTime)){
+                System.out.println("A");
+                break;
+            }
+            System.out.println("DD");
+        }
 
         // Testing
+        /*
         PassengersArrivingGenerator p = new PassengersArrivingGenerator();
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(6,15,0),"in"));
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(7,15,0),"in"));
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(9,15,0),"in"));
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(16,15,0),"in"));
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(18,15,0),"in"));
+        */
 
     }
 }

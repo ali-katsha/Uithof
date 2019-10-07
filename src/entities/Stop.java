@@ -1,9 +1,6 @@
 package entities;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Stop {
     public Stop(String name, int direction,int stopNumber) {
@@ -13,101 +10,11 @@ public class Stop {
         this.stopNumber = stopNumber;
 
         isBusy = false;
-        passengerQueue = new Queue<Passenger>() {
-            @Override
-            public boolean add(Passenger passenger) {
-                return false;
-            }
-
-            @Override
-            public boolean offer(Passenger passenger) {
-                return false;
-            }
-
-            @Override
-            public Passenger remove() {
-                return null;
-            }
-
-            @Override
-            public Passenger poll() {
-                return null;
-            }
-
-            @Override
-            public Passenger element() {
-                return null;
-            }
-
-            @Override
-            public Passenger peek() {
-                return null;
-            }
-
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<Passenger> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends Passenger> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-        } ;
-
+        passengerQueue = new LinkedList<>();
         maxWaitingTime=0;
         totalWaitingTime=0;
         numWaitPassenger=0;
+        waitingTrams = new LinkedList<>();
     }
 
 
@@ -118,97 +25,8 @@ public class Stop {
         this.stopNumber = stopNumber;
 
         isBusy = false;
-        passengerQueue = new Queue<Passenger>() {
-            @Override
-            public boolean add(Passenger passenger) {
-                return false;
-            }
-
-            @Override
-            public boolean offer(Passenger passenger) {
-                return false;
-            }
-
-            @Override
-            public Passenger remove() {
-                return null;
-            }
-
-            @Override
-            public Passenger poll() {
-                return null;
-            }
-
-            @Override
-            public Passenger element() {
-                return null;
-            }
-
-            @Override
-            public Passenger peek() {
-                return null;
-            }
-
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<Passenger> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends Passenger> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-        } ;
+        passengerQueue = new LinkedList<>();
+        waitingTrams = new LinkedList<>();
 
         maxWaitingTime=0;
         totalWaitingTime=0;
@@ -220,7 +38,11 @@ public class Stop {
     private int direction; // 0 Station->pnr | 1 pnr-> station |
     Queue<Passenger> passengerQueue;
     private int stopNumber;
+    Queue<Tram>  waitingTrams ;
 
+    public void addTramtoWaitingTrams(Tram tram){
+        waitingTrams.add(tram);
+    }
 
     long maxWaitingTime;
     long totalWaitingTime;
@@ -290,4 +112,14 @@ public class Stop {
     public void setStopNumber(int stopNumber) {
         this.stopNumber = stopNumber;
     }
+
+
+    public Queue<Tram> getWaitingTrams() {
+        return waitingTrams;
+    }
+
+    public void setWaitingTrams(Queue<Tram> waitingTrams) {
+        this.waitingTrams = waitingTrams;
+    }
+
 }

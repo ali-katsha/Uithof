@@ -1,8 +1,23 @@
 package entities;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class Tram {
+
+
+    public Tram() {
+
+    }
+
+    public Tram(int tramNum, Stop currentStop, Stop nextStop, LocalTime departureTime) {
+        this.tramNum = tramNum;
+        this.currentStop = currentStop;
+        this.nextStop = nextStop;
+        this.departureTime = departureTime;
+        this.travelTime =0;
+        this.passengersNumber = 0;
+    }
 
     private static final int MAX_CAPACITY = 420;
     private int tramNum;
@@ -11,7 +26,10 @@ public class Tram {
     private Stop currentStop;
     private Stop nextStop;
 
-    private int travelTime;
+    private LocalTime departureTime;
+    private LocalTime plannedArrivalTime;
+
+    private long travelTime;
     private int passengersNumber;
 
     private boolean waiting; //
@@ -52,11 +70,11 @@ public class Tram {
         this.nextStop = nextStop;
     }
 
-    public int getTravelTime() {
+    public long getTravelTime() {
         return travelTime;
     }
 
-    public void setTravelTime(int travelTime) {
+    public void setTravelTime(long travelTime) {
         this.travelTime = travelTime;
     }
 
@@ -74,5 +92,21 @@ public class Tram {
 
     public void setWaiting(boolean waiting) {
         this.waiting = waiting;
+    }
+
+    public LocalTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public LocalTime getPlannedArrivalTime() {
+        return plannedArrivalTime;
+    }
+
+    public void setPlannedArrivalTime(LocalTime plannedArrivalTime) {
+        this.plannedArrivalTime = plannedArrivalTime;
     }
 }
