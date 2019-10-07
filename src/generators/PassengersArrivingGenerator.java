@@ -15,7 +15,7 @@ public class PassengersArrivingGenerator {
     public PassengersArrivingGenerator() {
     }
 
-    public static int getNumPassengers(Stop stop, LocalTime time, String inOut) throws IOException {
+    public int getNumPassengers(Stop stop, LocalTime time, String inOut) throws IOException {
         double mean = getStopMean(stop, inOut)[getTimePeriod2(time)];
         double p = 1.0;
         int k = 0;
@@ -38,7 +38,7 @@ public class PassengersArrivingGenerator {
 
     }
 
-    private static double[] getStopMean(Stop stop, String inOut) throws IOException {
+    private double[] getStopMean(Stop stop, String inOut) throws IOException {
         double[][] means = new double[18][5];
 
         if (inOut.compareTo("in") == 0){
@@ -60,7 +60,7 @@ public class PassengersArrivingGenerator {
 
     }
 
-    private static double[][] getMeans(String path) throws IOException {
+    private double[][] getMeans(String path) throws IOException {
         double[][] means = new double[18][5];
         int counter = 0;
         File file = new File(path);
@@ -81,7 +81,7 @@ public class PassengersArrivingGenerator {
         return means;
     }
 
-    private static int getTimePeriod(int time){
+    private int getTimePeriod(int time){
         if(time >= 60000 && time < 70000){
             return 1;
         } else if(time >= 70000 && time < 90000){
@@ -97,24 +97,22 @@ public class PassengersArrivingGenerator {
         }
     }
 
-    private static int getTimePeriod2(LocalTime time){
-        if (time.isAfter(LocalTime.of(6,0,0)) && time.isBefore(LocalTime.of(7,0,1))){
+    private int getTimePeriod2(LocalTime time){
+        if (time.isBefore(LocalTime.of(6,59,59))){
             return 0;
-        } else if (time.isAfter(LocalTime.of(7,0,0)) && time.isBefore(LocalTime.of(9,0,1))){
+        } else if (time.isAfter(LocalTime.of(6,59,59)) && time.isBefore(LocalTime.of(8,59,59))){
             return 1;
-        } else if (time.isAfter(LocalTime.of(9,0,0)) && time.isBefore(LocalTime.of(16,0,1))){
+        } else if (time.isAfter(LocalTime.of(8,59,59)) && time.isBefore(LocalTime.of(15,59,59))){
             return 2;
-        } else if (time.isAfter(LocalTime.of(16,0,0)) && time.isBefore(LocalTime.of(18,0,1))){
+        } else if (time.isAfter(LocalTime.of(15,59,59)) && time.isBefore(LocalTime.of(17,59,59))){
             return 3;
-        } else if (time.isAfter(LocalTime.of(18,0,0))){
-            return 4;
         } else {
-            return 5;
+            return 4;
         }
 
     }
 
-    private static int getDenominator(LocalTime time){
+    private int getDenominator(LocalTime time){
         switch (getTimePeriod2(time)){
             case 0:
                 return 4;
