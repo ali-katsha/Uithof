@@ -66,15 +66,28 @@ public class Event implements Comparable<Event>{
     PriorityQueue<Event> eventHandlerArrivingStop(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS) throws IOException {
 
 
-
+        System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime);
         if (tram.getNextStop().getWaitingTrams().peek() == tram){
+            if (!tram.getPlannedArrivalTime().equals(eventTime)){
+                if (tram.getPlannedArrivalTime().isAfter(eventTime)){
+                    System.out.println(1);
+                    Event event = new Event(1,tram.getPlannedArrivalTime(),tram);
+                    eventQueue.add(event);
+                    return eventQueue;
+                }
+                System.out.println(2);
+            }
             //stop busy
             tram.getNextStop().setBusy(true);
 
             // Passengers in out
-          //  int passengersOut =PassengersArrivingGenerator.getNumPassengers(tram.getNextStop(),eventTime,"out");
-            int passengersOut =0;
+            int passengersOut =PassengersArrivingGenerator.getNumPassengers(tram.getNextStop(),eventTime,"out");
+          //  int passengersOut =0;
+
             int currentPassenger = tram.getPassengersNumber()-passengersOut;
+            if(currentPassenger<0) { currentPassenger =0; System.out.print(" Pass Out =" + tram.getPassengersNumber());}
+            else  System.out.print(" Pass Out =" + passengersOut);
+
 
             int numPassAllowed = tram.getMaxCapacity() - currentPassenger;
             int passengersCounter = 0;
@@ -88,7 +101,9 @@ public class Event implements Comparable<Event>{
                     break;
             }
 
+
             tram.setPassengersNumber(currentPassenger+passengersCounter);
+            System.out.println(" Pass In = "+passengersCounter + " Pass in Tram =" + tram.getPassengersNumber());
             //End Passengers in out
 
 
@@ -115,8 +130,10 @@ public class Event implements Comparable<Event>{
             return eventQueue;
 
         }
-        else
+        else {
+            System.out.println("wait");
             return eventQueue;
+        }
 
 /*
         if (tram.getNextStop().isBusy()){
@@ -138,15 +155,23 @@ public class Event implements Comparable<Event>{
 
     PriorityQueue<Event>  eventHandlerDepartureStop(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
 
-
+        //System.out.println();
         // set free and schedule new arriving
 
         if (!tram.getCurrentStop().getWaitingTrams().isEmpty()){
+            System.out.print("Departure, Tram:"+tram.getTramNum()+" Time:"+eventTime+" - Departure from stop : "+tram.getCurrentStop().getName());
+
             tram.getCurrentStop().setBusy(false);
             tram.getCurrentStop().getWaitingTrams().remove();
             if (!tram.getCurrentStop().getWaitingTrams().isEmpty()) {
-                Event arrivingEvent = new Event(1, eventTime.plusSeconds(40), tram.getCurrentStop().getWaitingTrams().peek());
-                eventQueue.add(arrivingEvent);
+                System.out.println(4);
+                Tram waitingTram = tram.getCurrentStop().getWaitingTrams().peek();
+                if (waitingTram.getPlannedArrivalTime().isBefore(eventTime.plusSeconds(40))){
+                    Event arrivingEvent = new Event(1, eventTime.plusSeconds(40), waitingTram);
+                    eventQueue.add(arrivingEvent);
+                    waitingTram.setPlannedArrivalTime(eventTime.plusSeconds(40));
+                    System.out.println(5);
+                }
             }
         }
 
@@ -156,7 +181,7 @@ public class Event implements Comparable<Event>{
         }*/
 
         long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
-
+        System.out.println(" Driving time"+drivingTime);
         Event arrivingEvent = new Event(1,eventTime.plusSeconds(drivingTime),this.tram);
 
 

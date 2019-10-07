@@ -16,7 +16,7 @@ public class Main {
 
         LocalTime simulationClock = LocalTime.of(0, 0, 0);
         LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(6, 25, 0);
+        LocalTime simulationEndTime = LocalTime.of(7, 25, 0);
 
         long maxWaitingTime;
         long totalWaitingTime;
@@ -94,14 +94,69 @@ public class Main {
             q.add(i);
 
         PriorityQueue<Event> eventQueue = new PriorityQueue<>();
+
         Tram tram = new Tram();
-        tram.setCurrentStop(CSStop); tram.setNextStop(stopA1); tram.setTramNum(1);
-        Event departureEvent = new Event(2,simulationStartTime,tram);
+        tram.setNextStop(CSStop);
+        //tram.setNextStop(stopA1);
+        tram.setTramNum(0);
+        tram.setDepartureTime(simulationStartTime);
+        tram.setPlannedArrivalTime(simulationStartTime);
+        Event departureEvent = new Event(1,simulationStartTime,tram);
         CSStop.addTramtoWaitingTrams(tram);
         eventQueue.add(departureEvent);
 
-        Queue<Tram> qq = new LinkedList<>();
-        qq.add(tram);
+
+
+
+        Tram tram1 = new Tram();
+        tram1.setNextStop(CSStop);
+        //tram.setNextStop(stopA1);
+        tram1.setTramNum(1);
+        tram1.setDepartureTime(simulationStartTime.plusMinutes(2));
+        tram1.setPlannedArrivalTime(simulationStartTime.plusMinutes(2));
+        Event departureEvent1 = new Event(1,simulationStartTime.plusMinutes(2),tram1);
+        CSStop.addTramtoWaitingTrams(tram1);
+        eventQueue.add(departureEvent1);
+
+
+
+
+
+
+        Event eventPassengerArrival = new Event(9,simulationStartTime,CSStop);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA1);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA2);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA3);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA4);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA5);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA6);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopA7);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,PNRStop);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB1);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB2);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB3);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB4);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB5);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB6);
+        eventQueue.add(eventPassengerArrival);
+        eventPassengerArrival = new Event(9,simulationStartTime,stopB7);
+        eventQueue.add(eventPassengerArrival);
+
+
 
 
         while (true){
@@ -111,7 +166,6 @@ public class Main {
                 System.out.println("A");
                 break;
             }
-            System.out.println("DD");
         }
 
         // Testing
