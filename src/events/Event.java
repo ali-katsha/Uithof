@@ -67,6 +67,7 @@ public class Event implements Comparable<Event>{
 
 
         System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime);
+
         if (tram.getNextStop().getWaitingTrams().peek() == tram){
             if (!tram.getPlannedArrivalTime().equals(eventTime)){
                 if (tram.getPlannedArrivalTime().isAfter(eventTime)){
@@ -77,6 +78,7 @@ public class Event implements Comparable<Event>{
                 }
                 System.out.println(2);
             }
+
             //stop busy
             tram.getNextStop().setBusy(true);
 

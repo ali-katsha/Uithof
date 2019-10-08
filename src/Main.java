@@ -101,9 +101,9 @@ public class Main {
         tram.setTramNum(0);
         tram.setDepartureTime(simulationStartTime);
         tram.setPlannedArrivalTime(simulationStartTime);
-        Event departureEvent = new Event(1,simulationStartTime,tram);
+        Event arriving = new Event(1,simulationStartTime,tram);
         CSStop.addTramtoWaitingTrams(tram);
-        eventQueue.add(departureEvent);
+        eventQueue.add(arriving);
 
 
 
@@ -114,9 +114,9 @@ public class Main {
         tram1.setTramNum(1);
         tram1.setDepartureTime(simulationStartTime.plusMinutes(2));
         tram1.setPlannedArrivalTime(simulationStartTime.plusMinutes(2));
-        Event departureEvent1 = new Event(1,simulationStartTime.plusMinutes(2),tram1);
+        Event arriving1 = new Event(1,simulationStartTime.plusMinutes(2),tram1);
         CSStop.addTramtoWaitingTrams(tram1);
-        eventQueue.add(departureEvent1);
+        eventQueue.add(arriving1);
 
 
 
