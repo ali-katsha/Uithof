@@ -13,6 +13,6 @@ public  class DrivingTimeGenerator {
         if (n>25)
         return 100;
         else
-            return 2000;
+            return 200;
     }
 }

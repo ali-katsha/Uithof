@@ -21,7 +21,7 @@ public class Tram {
 
     private static final int MAX_CAPACITY = 420;
     private int tramNum;
-    private String direction;
+    private int direction;
 
     private Stop currentStop;
     private Stop nextStop;
@@ -33,6 +33,9 @@ public class Tram {
     private int passengersNumber;
 
     private boolean waiting; //
+
+    LocalTime plannedArrivalEndStop;
+    LocalTime plannedDepartureEndStop;
 
     public static int getMaxCapacity() {
         return MAX_CAPACITY;
@@ -46,11 +49,11 @@ public class Tram {
         this.tramNum = tramNum;
     }
 
-    public String getDirection() {
+    public int getDirection() {
         return direction;
     }
 
-    public void setDirection(String direction) {
+    public void setDirection(int direction) {
         this.direction = direction;
     }
 
@@ -108,5 +111,21 @@ public class Tram {
 
     public void setPlannedArrivalTime(LocalTime plannedArrivalTime) {
         this.plannedArrivalTime = plannedArrivalTime;
+    }
+
+    public LocalTime getPlannedArrivalEndStop() {
+        return plannedArrivalEndStop;
+    }
+
+    public void setPlannedArrivalEndStop(LocalTime plannedArrivalEndStop) {
+        this.plannedArrivalEndStop = plannedArrivalEndStop;
+    }
+
+    public LocalTime getPlannedDepartureEndStop() {
+        return plannedDepartureEndStop;
+    }
+
+    public void setPlannedDepartureEndStop(LocalTime plannedDepartureEndStop) {
+        this.plannedDepartureEndStop = plannedDepartureEndStop;
     }
 }

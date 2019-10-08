@@ -3,6 +3,7 @@ import entities.Stop;
 import entities.Tram;
 import events.Event;
 import generators.PassengersArrivingGenerator;
+import generators.TimeTableGenerator;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -32,10 +33,6 @@ public class Main {
 
 
 
-        int frequency;
-        int turnaroundTime;
-        // calculate timetable
-
 
         EndStop CSStop =  new EndStop("CS",1);
 
@@ -60,6 +57,11 @@ public class Main {
         Stop stopB1 = new Stop(  "WKZ", 0 ,11);
 
 
+        int frequency = 4;
+        int turnaroundTime;
+        // calculate timetable
+        TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime,frequency,0);
+        TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,30);
 
         List<Stop> routeCSPNR = new ArrayList<Stop>();
         List<Stop> routePNRCS = new ArrayList<Stop>();
@@ -87,27 +89,38 @@ public class Main {
 
 
 
-        Queue<Integer> q = new LinkedList<>();
-
-        // Adds elements {0, 1, 2, 3, 4} to queue
-        for (int i=0; i<5; i++)
-            q.add(i);
 
         PriorityQueue<Event> eventQueue = new PriorityQueue<>();
 
-        Tram tram = new Tram();
-        tram.setNextStop(CSStop);
-        //tram.setNextStop(stopA1);
-        tram.setTramNum(0);
-        tram.setDepartureTime(simulationStartTime);
-        tram.setPlannedArrivalTime(simulationStartTime);
-        Event arriving = new Event(1,simulationStartTime,tram);
-        CSStop.addTramtoWaitingTrams(tram);
-        eventQueue.add(arriving);
+        for(int i=0;i<2;i++) {
+            Tram tram = new Tram();
+            tram.setNextStop(CSStop);
+            //tram.setNextStop(stopA1);
+            tram.setTramNum(i);
+            tram.setDepartureTime(simulationStartTime);
+            tram.setPlannedArrivalTime(simulationStartTime);
+            tram.setDirection(0);
+            Event arriving = new Event(3, simulationStartTime, tram);
+            CSStop.addTramtoWaitingTrams(tram);
+            eventQueue.add(arriving);
+        }
 
 
+        for(int i=0;i<2;i++) {
+            Tram tram = new Tram();
+            tram.setNextStop(PNRStop);
+            //tram.setNextStop(stopA1);
+            tram.setTramNum(i+4);
+            tram.setDepartureTime(simulationStartTime);
+            tram.setPlannedArrivalTime(simulationStartTime);
+            tram.setDirection(0);
+            Event arriving = new Event(3, simulationStartTime, tram);
+            PNRStop.addTramtoWaitingTrams(tram);
+            eventQueue.add(arriving);
+        }
 
 
+/*
         Tram tram1 = new Tram();
         tram1.setNextStop(CSStop);
         //tram.setNextStop(stopA1);
@@ -118,7 +131,7 @@ public class Main {
         CSStop.addTramtoWaitingTrams(tram1);
         eventQueue.add(arriving1);
 
-
+*/
 
 
 
