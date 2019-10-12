@@ -11,8 +11,8 @@ public  class DrivingTimeGenerator {
         Random rand = new Random();
         int n = rand.nextInt(50);
         if (n>25)
-        return 100;
+        return 10;
         else
-            return 200;
+            return 10;
     }
 }
