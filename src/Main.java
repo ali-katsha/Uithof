@@ -17,7 +17,7 @@ public class Main {
 
         LocalTime simulationClock = LocalTime.of(0, 0, 0);
         LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(7, 25, 0);
+        LocalTime simulationEndTime = LocalTime.of(11, 0, 0);
 
         long maxWaitingTime;
         long totalWaitingTime;
@@ -57,14 +57,16 @@ public class Main {
         Stop stopB1 = new Stop(  "WKZ", 0 ,11);
 
 
-        int frequency = 4;
+        int frequency = 2;
         int turnaroundTime;
+
         // calculate timetable
-        TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime,frequency,0);
-        TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,30);
+        TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0);
+        TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,15);
 
         List<Stop> routeCSPNR = new ArrayList<Stop>();
         List<Stop> routePNRCS = new ArrayList<Stop>();
+        List<Stop> stopList = new ArrayList<>();
 
         routeCSPNR.add(CSStop);
         routeCSPNR.add(stopA1);
@@ -89,10 +91,29 @@ public class Main {
 
 
 
+        stopList.add(CSStop);
+        stopList.add(stopA1);
+        stopList.add(stopA2);
+        stopList.add(stopA3);
+        stopList.add(stopA4);
+        stopList.add(stopA5);
+        stopList.add(stopA6);
+        stopList.add(stopA7);
+        stopList.add(PNRStop);
+        stopList.add(stopB1);
+        stopList.add(stopB2);
+        stopList.add(stopB3);
+        stopList.add(stopB4);
+        stopList.add(stopB5);
+        stopList.add(stopB6);
+        stopList.add(stopB7);
+
+
+
 
         PriorityQueue<Event> eventQueue = new PriorityQueue<>();
 
-        for(int i=0;i<2;i++) {
+        for(int i=0;i<1;i++) {
             Tram tram = new Tram();
             tram.setNextStop(CSStop);
             //tram.setNextStop(stopA1);
@@ -106,7 +127,7 @@ public class Main {
         }
 
 
-        for(int i=0;i<2;i++) {
+        for(int i=0;i<1;i++) {
             Tram tram = new Tram();
             tram.setNextStop(PNRStop);
             //tram.setNextStop(stopA1);
@@ -174,12 +195,22 @@ public class Main {
 
         while (true){
             Event event = eventQueue.remove();
+            simulationClock = event.getEventTime();
             eventQueue = event.eventHandler(eventQueue,routeCSPNR,routePNRCS);
             if(event.getEventTime().isAfter(simulationEndTime)){
                 System.out.println("A");
                 break;
             }
         }
+        System.out.println("------------Waiting in Stops----------");
+        for (int i =0 ; i<stopList.size();i++){
+            System.out.println("Stop" + stopList.get(i).getStopNumber()+" -"+stopList.get(i).getName());
+            System.out.println("Max waiting : " + stopList.get(i).getMaxWaitingTime());
+            System.out.println(" # Passengers waiting : " + stopList.get(i).getNumWaitPassenger());
+            System.out.println("Max waiting : " + stopList.get(i).getTotalWaitingTime());
+
+        }
+        System.out.println(1);
 
         // Testing
         /*

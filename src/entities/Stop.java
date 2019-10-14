@@ -1,5 +1,7 @@
 package entities;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Stop {
@@ -80,6 +82,14 @@ public class Stop {
         this.passengerQueue = passengerQueue;
     }
 
+
+    public void updateWaitingTime(Passenger passenger, LocalTime time){
+        long waiting = ChronoUnit.SECONDS.between(passenger.getArrivingTime(),time);
+        if (waiting >maxWaitingTime)
+            setMaxWaitingTime(waiting);
+        totalWaitingTime+=waiting;
+        numWaitPassenger++;
+    }
     public long getMaxWaitingTime() {
         return maxWaitingTime;
     }
@@ -103,6 +113,8 @@ public class Stop {
     public void setNumWaitPassenger(long numWaitPassenger) {
         this.numWaitPassenger = numWaitPassenger;
     }
+
+
 
 
     public int getStopNumber() {

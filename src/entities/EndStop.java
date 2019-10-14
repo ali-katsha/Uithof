@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EndStop extends Stop{
@@ -20,11 +21,12 @@ public class EndStop extends Stop{
     List<LocalTime> plannedArrival;
     List<LocalTime> plannedDeparture;
 
-
+    List<Long> departureDelayList;
 
     public EndStop(String name,int stopNumber) {
         super(name,stopNumber);
         aSwitch = new Switch(this);
+        departureDelayList = new ArrayList<>();
     }
 
     public Switch getaSwitch() {
@@ -51,6 +53,15 @@ public class EndStop extends Stop{
         return isABusy;
     }
 
+    public List<Long> getDepartureDelayList() {
+        return departureDelayList;
+    }
+
+    public void addDepartureDelay(Long delay){
+        System.out.println("Delay"+delay);
+        departureDelayList.add(delay);
+
+    }
     public void setABusy(boolean ABusy) {
         isABusy = ABusy;
     }
