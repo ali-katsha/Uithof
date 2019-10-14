@@ -6,6 +6,7 @@ import entities.Stop;
 import entities.Tram;
 import generators.DrivingTimeGenerator;
 import generators.PassengersArrivingGenerator;
+import generators.PassengersOutGenerator;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -67,7 +68,7 @@ public class Event implements Comparable<Event>{
 
     PriorityQueue<Event> eventHandlerPassengersArrival(PriorityQueue<Event> eventQueue) throws IOException {
 
-        int numPass = PassengersArrivingGenerator.getNumPassengers(stop,eventTime,"in");
+        int numPass = PassengersArrivingGenerator.getNumPassengers(stop,eventTime);
         for (int i=0;i<numPass;i++){
             stop.getPassengerQueue().add(new Passenger(eventTime,stop));
         }
@@ -98,7 +99,8 @@ public class Event implements Comparable<Event>{
             tram.getNextStop().setBusy(true);
 
             // Passengers in out
-            int passengersOut =PassengersArrivingGenerator.getNumPassengers(tram.getNextStop(),eventTime,"out");
+            //int passengersOut =PassengersArrivingGenerator.getNumPassengers(tram.getNextStop(),eventTime,"out");
+            int passengersOut = PassengersOutGenerator.getNumPassengers(tram,tram.getNextStop(),eventTime);
           //  int passengersOut =0;
 
             int currentPassenger = tram.getPassengersNumber()-passengersOut;
