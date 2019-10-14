@@ -12,6 +12,9 @@ public class EndStop extends Stop{
     boolean isABusy;
     boolean isBBusy;
 
+    private Tram tram_A;
+    private Tram tram_B;
+
     List<Passenger> passengerList;
 
     List<LocalTime> plannedArrival;
@@ -21,6 +24,7 @@ public class EndStop extends Stop{
 
     public EndStop(String name,int stopNumber) {
         super(name,stopNumber);
+        aSwitch = new Switch(this);
     }
 
     public Switch getaSwitch() {
@@ -30,6 +34,18 @@ public class EndStop extends Stop{
     public void setaSwitch(Switch aSwitch) {
         this.aSwitch = aSwitch;
     }
+
+    public Tram getTram_A() {
+        return tram_A;
+    }
+
+    public void setTram_A(Tram tram) { tram_A = tram; }
+
+    public Tram getTram_B() {
+        return tram_B;
+    }
+
+    public void setTram_B(Tram tram) { tram_B = tram; }
 
     public boolean isABusy() {
         return isABusy;

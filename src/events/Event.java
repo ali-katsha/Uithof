@@ -1,9 +1,6 @@
 package events;
 
-import entities.EndStop;
-import entities.Passenger;
-import entities.Stop;
-import entities.Tram;
+import entities.*;
 import generators.DrivingTimeGenerator;
 import generators.PassengersArrivingGenerator;
 
@@ -195,20 +192,25 @@ public class Event implements Comparable<Event>{
 
         long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
         System.out.println(" Driving time"+drivingTime);
+
         if (tram.getNextStop()== routeCSPNR.get(0) || tram.getNextStop()== routePNRCS.get(0) ){
             Event arrivingSwitchEvent = new Event(5, eventTime.plusSeconds(drivingTime), this.tram);
             eventQueue.add(arrivingSwitchEvent);
+
+            /// add tram to switch queue
+            EndStop eStop = (EndStop) tram.getNextStop();
+            eStop.getaSwitch().getIncomming().add(tram);
         }
         else {
             Event arrivingEvent = new Event(1, eventTime.plusSeconds(drivingTime), this.tram);
             eventQueue.add(arrivingEvent);
+            tram.getNextStop().addTramtoWaitingTrams(tram);
         }
 
         tram.setPlannedArrivalTime(eventTime.plusSeconds(drivingTime));
         tram.setDepartureTime(eventTime);
 
         //add tram to queue
-        tram.getNextStop().addTramtoWaitingTrams(tram);
 
 
 
@@ -216,17 +218,121 @@ public class Event implements Comparable<Event>{
     }
 
     PriorityQueue<Event> eventHandlerArrivingSwitch(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
-        Event event= new Event(3,eventTime,tram); // the arriving time to switch (event time) includes the driving time to the EndStop
-        eventQueue.add(event); // You can get the queue from getWaitingTrams()
         //DON'T FORGET TO UPDATE PLANNED ARRIVAL TIME in  tram object
-        return eventQueue;
+
+        if (tram.getNextStop() instanceof EndStop ){
+            EndStop stop = (EndStop) tram.getNextStop();
+            Switch aSwitch  = stop.getaSwitch();
+
+            if (aSwitch.getIncomming().peek() == tram){
+                if (aSwitch.Straight_in_busy() || aSwitch.Skewed_in_busy() || aSwitch.Skewed_out_busy()){
+                    System.out.println("Switch is busy, waiting");
+                    return  eventQueue;
+                }
+                else{
+                    if (stop.getTram_B() == null){
+                        Event event= new Event(6,eventTime.plusSeconds(60),tram);
+                        eventQueue.add(event);
+                        aSwitch.Set_skewed_in_busy(true);
+                        stop.setTram_B(tram);
+                        return eventQueue;
+                    }
+                    else if (stop.getTram_A() == null){
+                        Event event= new Event(6,eventTime,tram);
+                        eventQueue.add(event);
+                        aSwitch.Set_straight_in_busy(true);
+                        stop.setTram_A(tram);
+                        return eventQueue;
+                    }
+                    else{
+                        System.out.println("Station is busy, waiting");
+                        return  eventQueue;
+                    }
+                }
+            }
+            else{
+                System.out.println("Switch is busy, waiting");
+                return eventQueue;
+            }
+        }
+        else if(tram.getCurrentStop() instanceof  EndStop){
+            EndStop stop = (EndStop) tram.getCurrentStop();
+            Switch aSwitch  = stop.getaSwitch();
+
+            if (aSwitch.getOutgoing().peek() == tram){
+                if (aSwitch.Straight_out_busy() || aSwitch.Skewed_out_busy() || aSwitch.Skewed_in_busy()){
+                    System.out.println("Switch is busy, waiting");
+                    return  eventQueue;
+                }
+                else{
+                    if (stop.getTram_A() == tram){
+                        Event event = new Event(6, eventTime.plusSeconds(60), tram);
+                        eventQueue.add(event);
+                        aSwitch.Set_skewed_out_busy(true);
+                        stop.setTram_A(null);
+                        return eventQueue;
+                    }
+                    else if (stop.getTram_B() == tram){
+                        Event event = new Event(6, eventTime, tram);
+                        eventQueue.add(event);
+                        aSwitch.Set_straight_out_busy(true);
+                        stop.setTram_B(null);
+                        return eventQueue;
+                    }
+                    else{
+                        System.out.println("Station is busy, waiting");
+                        return  eventQueue;
+                    }
+                }
+            }
+            else{
+                System.out.println("Switch is busy, waiting");
+                return eventQueue;
+            }
+        }
+        else{
+            System.out.println("Error, endstop is not an endstop!");
+            return eventQueue;
+        }
     }
 
     PriorityQueue<Event> eventHandlerDepartureSwitch(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
-        Event event= new Event(1,eventTime,tram); // the event time is tricky here,  normally the event time includes the driving time So I am not sure if we should generate the driving time here rather than the stop Departure event
-        eventQueue.add(event);
-        //DON'T FORGET TO UPDATE PLANNED ARRIVAL TIME in tram object
-        return eventQueue;
+        //DON'T FORGET TO UPDATE PLANNED ARRIVAL TIME in  tram object
+
+        if (tram.getNextStop() instanceof EndStop ){
+            EndStop stop = (EndStop) tram.getNextStop();
+            Switch aSwitch  = stop.getaSwitch();
+
+            aSwitch.Set_skewed_in_busy(false);
+            aSwitch.Set_straight_in_busy(false);
+            aSwitch.getIncomming().remove(tram);
+
+            Event event = new Event(3, eventTime, tram);
+            eventQueue.add(event);
+            return eventQueue;
+        }
+        else if (tram.getCurrentStop() instanceof EndStop){
+            EndStop stop = (EndStop) tram.getCurrentStop();
+            Switch aSwitch  = stop.getaSwitch();
+
+            aSwitch.Set_skewed_out_busy(false);
+            aSwitch.Set_straight_out_busy(false);
+            aSwitch.getOutgoing().remove(tram);
+
+            long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
+            System.out.println(" Driving time"+drivingTime);
+
+            tram.setPlannedArrivalTime(eventTime.plusSeconds(drivingTime));
+            tram.getNextStop().addTramtoWaitingTrams(tram);
+
+            Event arrivingEvent = new Event(1, eventTime.plusSeconds(drivingTime), tram);
+            eventQueue.add(arrivingEvent);
+            return eventQueue;
+        }
+        else{
+            System.out.println("Error, leaving the switch!");
+            return eventQueue;
+        }
     }
 
 
@@ -247,7 +353,7 @@ public class Event implements Comparable<Event>{
             }
 
             //stop busy
-            tram.getNextStop().setBusy(true);
+//            tram.getNextStop().setBusy(true);
 
             // Passengers in out
             int passengersOut =tram.getPassengersNumber();
@@ -348,20 +454,23 @@ public class Event implements Comparable<Event>{
             Event arriving = new Event(1, eventTime.plusSeconds(40), tram.getCurrentStop().getWaitingTrams().peek());
         }*/
 
-        long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
-        System.out.println(" Driving time"+drivingTime);
+//        long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
+//        System.out.println(" Driving time"+drivingTime);
+//
+//        Event arrivingEvent = new Event(6, eventTime.plusSeconds(drivingTime), this.tram);
+//        eventQueue.add(arrivingEvent);
 
-        Event arrivingEvent = new Event(6, eventTime.plusSeconds(drivingTime), this.tram);
-        eventQueue.add(arrivingEvent);
-
-        tram.setPlannedArrivalTime(eventTime.plusSeconds(drivingTime));
+//        tram.setPlannedArrivalTime(eventTime.plusSeconds(drivingTime));
         tram.setDepartureTime(eventTime);
 
         //add tram to queue
-        tram.getNextStop().addTramtoWaitingTrams(tram);
+//        tram.getNextStop().addTramtoWaitingTrams(tram);
 
+        EndStop eStop = (EndStop) tram.getCurrentStop();
+        eStop.getaSwitch().getOutgoing().add(tram);
 
-
+        Event arrivingEvent = new Event(6, eventTime, tram);
+        eventQueue.add(arrivingEvent);
         return eventQueue;
     }
 
