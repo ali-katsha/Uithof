@@ -218,8 +218,8 @@ public class Event implements Comparable<Event>{
             eventQueue.add(arrivingSwitchEvent);
 
             /// add tram to switch queue
-            EndStop eStop = (EndStop) tram.getNextStop();
-            eStop.getaSwitch().getIncomming().add(tram);
+            EndStop eStop = (EndStop) (tram.getNextStop());
+            eStop.getaSwitch().addIncomming(tram);
         }
         else {
             Event arrivingEvent = new Event(1, eventTime.plusSeconds(drivingTime), this.tram);
@@ -239,18 +239,20 @@ public class Event implements Comparable<Event>{
 
     PriorityQueue<Event> eventHandlerArrivingSwitch(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
         //DON'T FORGET TO UPDATE PLANNED ARRIVAL TIME in  tram object
+        System.out.println("Tram" + tram.getTramNum() + "Arrived at switch");
 
         if (tram.getNextStop() instanceof EndStop ){
             EndStop stop = (EndStop) tram.getNextStop();
             Switch aSwitch  = stop.getaSwitch();
 
-            if (aSwitch.getIncomming().peek() == tram){
+            if (aSwitch.peakIncomming() == tram){
                 if (aSwitch.Straight_in_busy() || aSwitch.Skewed_in_busy() || aSwitch.Skewed_out_busy()){
                     System.out.println("Switch is busy, waiting");
                     return  eventQueue;
                 }
                 else{
                     if (stop.getTram_B() == null){
+                        System.out.println("Tram" + tram.getTramNum() + "incoming, skewed");
                         Event event= new Event(6,eventTime.plusSeconds(60),tram);
                         eventQueue.add(event);
                         aSwitch.Set_skewed_in_busy(true);
@@ -258,6 +260,7 @@ public class Event implements Comparable<Event>{
                         return eventQueue;
                     }
                     else if (stop.getTram_A() == null){
+                        System.out.println("Tram" + tram.getTramNum() + "incoming, straight");
                         Event event= new Event(6,eventTime,tram);
                         eventQueue.add(event);
                         aSwitch.Set_straight_in_busy(true);
@@ -279,13 +282,14 @@ public class Event implements Comparable<Event>{
             EndStop stop = (EndStop) tram.getCurrentStop();
             Switch aSwitch  = stop.getaSwitch();
 
-            if (aSwitch.getOutgoing().peek() == tram){
+            if (aSwitch.peakOutgoing() == tram){
                 if (aSwitch.Straight_out_busy() || aSwitch.Skewed_out_busy() || aSwitch.Skewed_in_busy()){
                     System.out.println("Switch is busy, waiting");
                     return  eventQueue;
                 }
                 else{
                     if (stop.getTram_A() == tram){
+                        System.out.println("Tram" + tram.getTramNum() + "outgoing, skewed");
                         Event event = new Event(6, eventTime.plusSeconds(60), tram);
                         eventQueue.add(event);
                         aSwitch.Set_skewed_out_busy(true);
@@ -293,6 +297,7 @@ public class Event implements Comparable<Event>{
                         return eventQueue;
                     }
                     else if (stop.getTram_B() == tram){
+                        System.out.println("Tram" + tram.getTramNum() + "outgoing, straight");
                         Event event = new Event(6, eventTime, tram);
                         eventQueue.add(event);
                         aSwitch.Set_straight_out_busy(true);
@@ -320,24 +325,27 @@ public class Event implements Comparable<Event>{
         //DON'T FORGET TO UPDATE PLANNED ARRIVAL TIME in  tram object
 
         if (tram.getNextStop() instanceof EndStop ){
+            System.out.println("Tram" + tram.getTramNum() + "leaving switch to endpoint");
+
             EndStop stop = (EndStop) tram.getNextStop();
             Switch aSwitch  = stop.getaSwitch();
 
             aSwitch.Set_skewed_in_busy(false);
             aSwitch.Set_straight_in_busy(false);
-            aSwitch.getIncomming().remove(tram);
+            aSwitch.pollIncomming();
 
             Event event = new Event(3, eventTime, tram);
             eventQueue.add(event);
             return eventQueue;
         }
         else if (tram.getCurrentStop() instanceof EndStop){
+            System.out.println("Tram" + tram.getTramNum() + "leaving switch to next stop");
             EndStop stop = (EndStop) tram.getCurrentStop();
             Switch aSwitch  = stop.getaSwitch();
 
             aSwitch.Set_skewed_out_busy(false);
             aSwitch.Set_straight_out_busy(false);
-            aSwitch.getOutgoing().remove(tram);
+            aSwitch.pollOutgoing();
 
             long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
             System.out.println(" Driving time"+drivingTime);
@@ -534,10 +542,11 @@ public class Event implements Comparable<Event>{
         //add tram to queue
 //        tram.getNextStop().addTramtoWaitingTrams(tram);
 
-        EndStop eStop = (EndStop) tram.getCurrentStop();
-        eStop.getaSwitch().getOutgoing().add(tram);
+        EndStop eStop = (EndStop) (tram.getCurrentStop());
+//        eStop.getaSwitch().getOutgoing().add(tram);
+        eStop.getaSwitch().addOutgoing(tram);
 
-        Event arrivingEvent = new Event(6, eventTime, tram);
+        Event arrivingEvent = new Event(5, eventTime, tram);
         eventQueue.add(arrivingEvent);
         return eventQueue;
     }

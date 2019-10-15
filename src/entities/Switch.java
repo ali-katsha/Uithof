@@ -1,25 +1,42 @@
 package entities;
 
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Switch {
 
     private EndStop station;
-    private PriorityQueue<Tram> incomming, outgoing;
+    private Queue<Tram> incomming, outgoing;
     private boolean straight_in_busy, skewed_in_busy, straight_out_busy, skewed_out_busy;
 
     public Switch(EndStop station){
         this.station  = station;
-        incomming = outgoing = new PriorityQueue<Tram>();
+        incomming = outgoing = new LinkedList<Tram>();
         straight_in_busy = skewed_in_busy = straight_out_busy = skewed_out_busy = false;
     }
 
-    public PriorityQueue<Tram> getIncomming(){
-        return incomming;
+    public void addIncomming(Tram tram){
+        incomming.add(tram);
     }
 
-    public PriorityQueue<Tram> getOutgoing(){
-        return outgoing;
+    public void addOutgoing(Tram tram){
+        outgoing.add(tram);
+    }
+
+    public Tram pollIncomming(){
+        return incomming.poll();
+    }
+
+    public Tram pollOutgoing(){
+        return outgoing.poll();
+    }
+
+    public Tram peakIncomming(){
+        return incomming.peek();
+    }
+
+    public Tram peakOutgoing(){
+        return outgoing.peek();
     }
 
     public boolean Straight_in_busy(){
