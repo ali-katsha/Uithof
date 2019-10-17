@@ -18,7 +18,7 @@ public  class DrivingTimeGenerator {
 
     public static double generateDrivingTimeValidation(Stop currentStop, Stop nextStop, int valNumber){
 
-        int[] avgDrivingTimes = {134,243,59,101,60,86,78,113,110,0,110,78,82,60,100,59,243,135};
+        int[] avgDrivingTimes = {0, 134,243,59,101,60,86,78,113,110,0,110,78,82,60,100,59,243,135};
 
         Random r = new Random();
         double random = r.nextFloat();
