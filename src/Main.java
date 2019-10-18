@@ -116,6 +116,10 @@ public class Main {
         for(int i=0;i<1;i++) {
             Tram tram = new Tram();
             tram.setNextStop(CSStop);
+
+            if (i == 0) CSStop.setTram_A(tram);
+            else CSStop.setTram_B(tram);
+
             //tram.setNextStop(stopA1);
             tram.setTramNum(i);
             tram.setDepartureTime(simulationStartTime);
@@ -126,10 +130,13 @@ public class Main {
             eventQueue.add(arriving);
         }
 
-
         for(int i=0;i<1;i++) {
             Tram tram = new Tram();
             tram.setNextStop(PNRStop);
+
+            if (i == 0) PNRStop.setTram_A(tram);
+            else PNRStop.setTram_B(tram);
+
             //tram.setNextStop(stopA1);
             tram.setTramNum(i+4);
             tram.setDepartureTime(simulationStartTime);

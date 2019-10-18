@@ -15,16 +15,17 @@ public class PassengersArrivingGenerator {
     public PassengersArrivingGenerator() {
     }
 
-    public static int getNumPassengers(Stop stop, LocalTime time, String inOut) throws IOException {
-        double mean = getStopMean(stop, inOut)[getTimePeriod2(time)];
+    public static int getNumPassengersValidation(Stop stop, LocalTime time, int valNumber) throws IOException {
+        double mean = getStopMeanForValidation(stop, time, valNumber);
+        System.out.println(mean);
         double p = 1.0;
         int k = 0;
         int step = 600;
         do {
             k++;
             p *= Math.random();
-            while (p < 1 && mean > 0){
-                if (mean > step){
+            while (p < 1 && mean > 0) {
+                if (mean > step) {
                     p *= Math.exp(step);
                     mean -= step;
                 } else {
@@ -34,41 +35,91 @@ public class PassengersArrivingGenerator {
             }
         } while (p > 1);
 
-        return (k - 1)/getDenominator(time);
+        return k - 1;
+    }
+
+    public static int getNumPassengers(Stop stop, LocalTime time) throws IOException {
+
+            double mean = getStopMean(stop, time);
+            System.out.println(mean);
+            double p = 1.0;
+            int k = 0;
+            int step = 600;
+            do {
+                k++;
+                p *= Math.random();
+                while (p < 1 && mean > 0) {
+                    if (mean > step) {
+                        p *= Math.exp(step);
+                        mean -= step;
+                    } else {
+                        p *= Math.exp(mean);
+                        mean = 0;
+                    }
+                }
+            } while (p > 1);
+
+            return k - 1;
+
 
     }
 
-    private static double[] getStopMean(Stop stop, String inOut) throws IOException {
-        double[][] means = new double[18][5];
 
-        if (inOut.compareTo("in") == 0){
-            // Stop number,time period
-            means = getMeans("src/files/meanValuesIn.txt");
-        } else if (inOut.compareTo("out") == 0){
-            // Stop number,time period
-            means = getMeans("src/files/meanValuesOut.txt");
+    private static double getStopMeanForValidation(Stop stop, LocalTime time, int valNumber) throws IOException {
+        double[][] means;
+        String fileName = "validation" + valNumber + "In";
+
+
+        if (stop.getStopNumber() >= 1 && stop.getStopNumber() < 9 || stop.getStopNumber() == 18){
+            means = getMeans("src/files/validation/" + fileName + "B.txt");
+        } else {
+            means = getMeans("src/files/validation/" + fileName + "A.txt");
         }
 
 
-        if (stop.getStopNumber() == 1){
-            return means[0];
-        } else if (stop.getStopNumber() == 9){
-            return means[9];
+        if (stop.getStopNumber() == 1 || stop.getStopNumber() == 18){
+            return means[getTimePeriod(time)][0];
+        } else if (stop.getStopNumber() > 1 && stop.getStopNumber() <= 8){
+            return means[getTimePeriod(time)][stop.getStopNumber()-1];
+        } else if (stop.getStopNumber() == 9 || stop.getStopNumber() == 10){
+            return means[getTimePeriod(time)][0];
         } else {
-            return means[stop.getStopNumber()-1];
+            return means[getTimePeriod(time)][stop.getStopNumber()%10];
+        }
+    }
+
+    private static double getStopMean(Stop stop, LocalTime time) throws IOException {
+        double[][] means;
+
+
+        if (stop.getStopNumber() >= 1 && stop.getStopNumber() < 9 || stop.getStopNumber() == 18){
+            means = getMeans("src/files/meanValuesRouteB.txt");
+        } else {
+            means = getMeans("src/files/meanValuesRouteA.txt");
+        }
+
+
+        if (stop.getStopNumber() == 1 || stop.getStopNumber() == 18){
+            return means[getTimePeriod(time)][0];
+        } else if (stop.getStopNumber() > 1 && stop.getStopNumber() <= 8){
+            return means[getTimePeriod(time)][stop.getStopNumber()-1];
+        } else if (stop.getStopNumber() == 9 || stop.getStopNumber() == 10){
+            return means[getTimePeriod(time)][0];
+        } else {
+            return means[getTimePeriod(time)][stop.getStopNumber()%10];
         }
 
     }
 
     private static double[][] getMeans(String path) throws IOException {
-        double[][] means = new double[18][5];
+        double[][] means = new double[63][9];
         int counter = 0;
         File file = new File(path);
         BufferedReader br = new BufferedReader(new FileReader(file));
 
         String st;
         while((st = br.readLine()) != null){
-            double [] tmp = new double[5];
+            double [] tmp = new double[9];
             String[] tmpStr = st.split(",");
             for (int i = 0; i < tmpStr.length; i++){
                 tmp[i] = Double.valueOf(tmpStr[i]);
@@ -81,50 +132,33 @@ public class PassengersArrivingGenerator {
         return means;
     }
 
-    private static int getTimePeriod(int time){
-        if(time >= 60000 && time < 70000){
-            return 1;
-        } else if(time >= 70000 && time < 90000){
-            return 2;
-        } else if (time >= 90000 && time < 160000){
-            return 3;
-        } else if (time >= 160000 && time < 180000){
-            return 4;
-        } else if (time >= 180000){
-            return 5;
-        } else {
-            return 0;
-        }
-    }
+    private static int getTimePeriod(LocalTime time) throws IOException {
+        int[][] times = new int[62][4];
+        int counter = 0;
 
-    private static int getTimePeriod2(LocalTime time){
-        if (time.isBefore(LocalTime.of(6,59,59))){
-            return 0;
-        } else if (time.isAfter(LocalTime.of(6,59,59)) && time.isBefore(LocalTime.of(8,59,59))){
-            return 1;
-        } else if (time.isAfter(LocalTime.of(8,59,59)) && time.isBefore(LocalTime.of(15,59,59))){
-            return 2;
-        } else if (time.isAfter(LocalTime.of(15,59,59)) && time.isBefore(LocalTime.of(17,59,59))){
-            return 3;
-        } else {
-            return 4;
+        File file = new File("src/files/timePeriods.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        String st;
+        while((st = br.readLine()) != null){
+            int [] tmp = new int[4];
+            String[] tmpStr = st.split(",|:");
+            for (int i = 0; i < tmpStr.length; i++){
+                tmp[i] = Integer.valueOf(tmpStr[i]);
+
+            }
+            times[counter] = tmp;
+            counter++;
         }
 
+        for (int i = 0; i < times.length; i++){
+            if (time.isBefore(LocalTime.of(times[i][0],times[i][1],times[i][2]))){
+                return times[i][3];
+            }
+        }
+
+        return 62;
     }
 
-    private static int getDenominator(LocalTime time){
-        switch (getTimePeriod2(time)){
-            case 0:
-                return 4;
-            case 1:
-            case 3:
-                return 8;
-            case 2:
-                return 28;
-            case 4:
-                return 14;
-            default:
-                return 1;
-        }
-    }
+
 }
