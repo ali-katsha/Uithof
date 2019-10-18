@@ -18,8 +18,8 @@ public class Event implements Comparable<Event>{
     LocalTime eventTime;
     private Tram tram;
     private Stop stop;
-    private static final LocalTime CALCULATION_START_TIME = LocalTime.of(0, 0, 0);
-    private static final LocalTime CALCULATION_END_TIME = LocalTime.of(23, 59, 59);
+    private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
+    private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
     private static final long TURN_AROUND_TIME = 180;
 
 
@@ -369,7 +369,8 @@ public class Event implements Comparable<Event>{
 
         System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime);
 
-        if (tram.getNextStop().getWaitingTrams().peek() == tram){
+        if (tram.getNextStop().getWaitingTrams().peek() == tram)
+        {
             if (!tram.getPlannedArrivalTime().equals(eventTime)){
                 if (tram.getPlannedArrivalTime().isAfter(eventTime)){
 

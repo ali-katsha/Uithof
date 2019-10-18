@@ -17,7 +17,7 @@ public class Main {
 
         LocalTime simulationClock = LocalTime.of(0, 0, 0);
         LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(11, 0, 0);
+        LocalTime simulationEndTime = LocalTime.of(21, 0, 0);
 
         long maxWaitingTime;
         long totalWaitingTime;

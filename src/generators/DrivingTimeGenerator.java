@@ -11,9 +11,11 @@ public  class DrivingTimeGenerator {
         Random rand = new Random();
         int n = rand.nextInt(50);
         if (n>25)
-        return 10;
+        //return 10;
+            return (long)generateDrivingTimeValidation(currentStop,nextStop,3);
         else
-            return 10;
+            //return 10;
+            return (long)generateDrivingTimeValidation(currentStop,nextStop,3);
     }
 
     public static double generateDrivingTimeValidation(Stop currentStop, Stop nextStop, int valNumber){
