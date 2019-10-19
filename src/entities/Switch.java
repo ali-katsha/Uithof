@@ -11,7 +11,7 @@ public class Switch {
 
     public Switch(EndStop station){
         this.station  = station;
-        incomming = outgoing = new LinkedList<Tram>();
+        incomming = new LinkedList<Tram>(); outgoing = new LinkedList<Tram>();
         straight_in_busy = skewed_in_busy = straight_out_busy = skewed_out_busy = false;
     }
 

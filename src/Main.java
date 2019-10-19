@@ -113,7 +113,7 @@ public class Main {
 
         PriorityQueue<Event> eventQueue = new PriorityQueue<>();
 
-        for(int i=0;i<1;i++) {
+        for(int i=0;i<2;i++) {
             Tram tram = new Tram();
             tram.setNextStop(CSStop);
 
@@ -121,16 +121,16 @@ public class Main {
             else CSStop.setTram_B(tram);
 
             //tram.setNextStop(stopA1);
-            tram.setTramNum(i);
+            tram.setTramNum(i + 1);
             tram.setDepartureTime(simulationStartTime);
             tram.setPlannedArrivalTime(simulationStartTime);
             tram.setDirection(0);
             Event arriving = new Event(3, simulationStartTime, tram);
-            CSStop.addTramtoWaitingTrams(tram);
+//            CSStop.addTramtoWaitingTrams(tram);
             eventQueue.add(arriving);
         }
 
-        for(int i=0;i<1;i++) {
+        for(int i=0;i<2;i++) {
             Tram tram = new Tram();
             tram.setNextStop(PNRStop);
 
@@ -138,12 +138,12 @@ public class Main {
             else PNRStop.setTram_B(tram);
 
             //tram.setNextStop(stopA1);
-            tram.setTramNum(i+4);
+            tram.setTramNum(i+3);
             tram.setDepartureTime(simulationStartTime);
             tram.setPlannedArrivalTime(simulationStartTime);
             tram.setDirection(0);
             Event arriving = new Event(3, simulationStartTime, tram);
-            PNRStop.addTramtoWaitingTrams(tram);
+//            PNRStop.addTramtoWaitingTrams(tram);
             eventQueue.add(arriving);
         }
 
