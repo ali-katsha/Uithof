@@ -17,7 +17,7 @@ public class Main {
 
         LocalTime simulationClock = LocalTime.of(0, 0, 0);
         LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(11, 0, 0);
+        LocalTime simulationEndTime = LocalTime.of(21, 0, 0);
 
         long maxWaitingTime;
         long totalWaitingTime;
@@ -229,5 +229,23 @@ public class Main {
         System.out.println(p.getNumPassengers(CSStop,LocalTime.of(18,15,0),"in"));
         */
 
+        System.out.println(numberOfTrams(4));
+    }
+
+    public  static int numberOfTrams(int frequency)
+    {
+
+        if(60/frequency<=22)
+        {
+            double num1= 60/frequency;
+            double num2=22/num1;
+            double num3=num2*2;
+            return (int)Math.ceil(num3);
+
+        }
+        else {
+
+            return 2;
+        }
     }
 }
