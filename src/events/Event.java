@@ -254,6 +254,10 @@ public class Event implements Comparable<Event>{
                     if (stop.getTram_B() == null){
                         System.out.println("Tram" + tram.getTramNum() + "incoming, skewed");
                         Event event= new Event(6,eventTime.plusSeconds(60),tram);
+
+                        if (eventTime.plusSeconds(60).isAfter(tram.getPlannedArrivalTime()))
+                            tram.setPlannedArrivalTime(eventTime.plusSeconds(60));
+
                         eventQueue.add(event);
                         aSwitch.Set_skewed_in_busy(true);
                         stop.setTram_B(tram);
@@ -291,6 +295,7 @@ public class Event implements Comparable<Event>{
                     if (stop.getTram_A() == tram){
                         System.out.println("Tram" + tram.getTramNum() + "outgoing, skewed");
                         Event event = new Event(6, eventTime.plusSeconds(60), tram);
+                        tram.setPlannedArrivalTime(tram.getPlannedArrivalTime().plusSeconds(60));
                         eventQueue.add(event);
                         aSwitch.Set_skewed_out_busy(true);
                         stop.setTram_A(null);
@@ -334,6 +339,18 @@ public class Event implements Comparable<Event>{
             aSwitch.Set_straight_in_busy(false);
             aSwitch.pollIncomming();
 
+            if (aSwitch.peakIncomming() != null){
+                Tram nextTram = aSwitch.peakIncomming();
+                Event event = new Event(5, eventTime, nextTram);
+                eventQueue.add(event);
+            }
+
+            if (aSwitch.peakOutgoing() != null){
+                Tram nextTram = aSwitch.peakOutgoing();
+                Event event = new Event(5, eventTime, nextTram);
+                eventQueue.add(event);
+            }
+
             Event event = new Event(3, eventTime, tram);
             eventQueue.add(event);
             return eventQueue;
@@ -346,6 +363,18 @@ public class Event implements Comparable<Event>{
             aSwitch.Set_skewed_out_busy(false);
             aSwitch.Set_straight_out_busy(false);
             aSwitch.pollOutgoing();
+
+            if (aSwitch.peakIncomming() != null){
+                Tram nextTram = aSwitch.peakIncomming();
+                Event event = new Event(5, eventTime, nextTram);
+                eventQueue.add(event);
+            }
+
+            if (aSwitch.peakOutgoing() != null){
+                Tram nextTram = aSwitch.peakOutgoing();
+                Event event = new Event(5, eventTime, nextTram);
+                eventQueue.add(event);
+            }
 
             long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
             System.out.println(" Driving time"+drivingTime);

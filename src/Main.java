@@ -12,12 +12,12 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-	// write your code here
+        // write your code here
 
 
         LocalTime simulationClock = LocalTime.of(0, 0, 0);
         LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(21, 0, 0);
+        LocalTime simulationEndTime = LocalTime.of(22, 0, 0);
 
         long maxWaitingTime;
         long totalWaitingTime;
@@ -210,14 +210,20 @@ public class Main {
             }
         }
         System.out.println("------------Waiting in Stops----------");
+        long totalNumSimulationWaiting =0;
+        long totalSimulationWaiting =0;
+
         for (int i =0 ; i<stopList.size();i++){
             System.out.println("Stop" + stopList.get(i).getStopNumber()+" -"+stopList.get(i).getName());
             System.out.println("Max waiting : " + stopList.get(i).getMaxWaitingTime());
             System.out.println(" # Passengers waiting : " + stopList.get(i).getNumWaitPassenger());
             System.out.println("Max waiting : " + stopList.get(i).getTotalWaitingTime());
+            totalNumSimulationWaiting += stopList.get(i).getNumWaitPassenger();
+            totalSimulationWaiting +=stopList.get(i).getTotalWaitingTime();
 
         }
         System.out.println(1);
+        System.out.println("Ratio"+totalSimulationWaiting/totalNumSimulationWaiting );
 
         // Testing
         /*
