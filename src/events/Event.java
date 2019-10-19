@@ -369,8 +369,7 @@ public class Event implements Comparable<Event>{
 
         System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime);
 
-        if (tram.getNextStop().getWaitingTrams().peek() == tram)
-        {
+//        if (tram.getNextStop().getWaitingTrams().peek() == tram){
             if (!tram.getPlannedArrivalTime().equals(eventTime)){
                 if (tram.getPlannedArrivalTime().isAfter(eventTime)){
 
@@ -493,11 +492,11 @@ public class Event implements Comparable<Event>{
             eventQueue.add(departure);
             return eventQueue;
 
-        }
-        else {
-            System.out.println("wait");
-            return eventQueue;
-        }
+//        }
+//        else {
+//            System.out.println("wait");
+//            return eventQueue;
+//        }
 
 
 
