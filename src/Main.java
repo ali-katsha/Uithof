@@ -57,7 +57,7 @@ public class Main {
         Stop stopB1 = new Stop(  "WKZ", 0 ,11);
 
 
-        int frequency = 2;
+        int frequency = 12;
         int turnaroundTime;
 
         // calculate timetable
@@ -110,43 +110,51 @@ public class Main {
 
 
 
-
         PriorityQueue<Event> eventQueue = new PriorityQueue<>();
-
-        for(int i=0;i<2;i++) {
+        for(int i=0;i<5;i++) {
             Tram tram = new Tram();
             tram.setNextStop(CSStop);
+            tram.setCurrentStop(CSStop);
 
-            if (i == 0) CSStop.setTram_A(tram);
-            else CSStop.setTram_B(tram);
+      //      if (i == 0) CSStop.setTram_A(tram);
+    //        else CSStop.setTram_B(tram);
 
             //tram.setNextStop(stopA1);
             tram.setTramNum(i + 1);
-            tram.setDepartureTime(simulationStartTime);
-            tram.setPlannedArrivalTime(simulationStartTime);
+            LocalTime t =  LocalTime.of(simulationStartTime.getHour(),simulationClock.getMinute(),simulationClock.getSecond());
+            t=t.plusMinutes((i*60/frequency) - 1);
+            System.out.println(t);
+            tram.setDepartureTime(t);
+            tram.setPlannedArrivalTime(t);
             tram.setDirection(0);
-            Event arriving = new Event(3, simulationStartTime, tram);
+            Event arriving = new Event(5, t, tram);
+            CSStop.getaSwitch().addIncomming(tram);
 //            CSStop.addTramtoWaitingTrams(tram);
             eventQueue.add(arriving);
+
         }
 
-        for(int i=0;i<2;i++) {
+        for(int i=0;i<4;i++) {
             Tram tram = new Tram();
+            tram.setCurrentStop(PNRStop);
             tram.setNextStop(PNRStop);
 
-            if (i == 0) PNRStop.setTram_A(tram);
-            else PNRStop.setTram_B(tram);
+//            if (i == 0) PNRStop.setTram_A(tram);
+  //          else PNRStop.setTram_B(tram);
 
             //tram.setNextStop(stopA1);
-            tram.setTramNum(i+3);
-            tram.setDepartureTime(simulationStartTime);
-            tram.setPlannedArrivalTime(simulationStartTime);
+            tram.setTramNum(i+10);
+            LocalTime t =  LocalTime.of(simulationStartTime.getHour(),simulationClock.getMinute(),simulationClock.getSecond());
+            t=t.plusMinutes((i*60/frequency)-1 );
+            System.out.println(t);
+            tram.setDepartureTime(t);
+            tram.setPlannedArrivalTime(t);
             tram.setDirection(0);
-            Event arriving = new Event(3, simulationStartTime, tram);
+            Event arriving = new Event(5, t, tram);
 //            PNRStop.addTramtoWaitingTrams(tram);
+            PNRStop.getaSwitch().addIncomming(tram);
             eventQueue.add(arriving);
         }
-
 
 /*
         Tram tram1 = new Tram();
@@ -205,37 +213,44 @@ public class Main {
             simulationClock = event.getEventTime();
             eventQueue = event.eventHandler(eventQueue,routeCSPNR,routePNRCS);
             if(event.getEventTime().isAfter(simulationEndTime)){
-                System.out.println("A");
+                System.out.println("Simulation End");
                 break;
             }
         }
-        System.out.println("------------Waiting in Stops----------");
+        System.out.println("------------Stats----------");
         long totalNumSimulationWaiting =0;
         long totalSimulationWaiting =0;
 
         for (int i =0 ; i<stopList.size();i++){
-            System.out.println("Stop" + stopList.get(i).getStopNumber()+" -"+stopList.get(i).getName());
-            System.out.println("Max waiting : " + stopList.get(i).getMaxWaitingTime());
-            System.out.println(" # Passengers waiting : " + stopList.get(i).getNumWaitPassenger());
-            System.out.println("Max waiting : " + stopList.get(i).getTotalWaitingTime());
+    //        System.out.println("Stop" + stopList.get(i).getStopNumber()+" -"+stopList.get(i).getName());
+      //      System.out.println("Max waiting : " + stopList.get(i).getMaxWaitingTime());
+        //    System.out.println(" # Passengers waiting : " + stopList.get(i).getNumWaitPassenger());
+          //  System.out.println("Max waiting : " + stopList.get(i).getTotalWaitingTime());
             totalNumSimulationWaiting += stopList.get(i).getNumWaitPassenger();
             totalSimulationWaiting +=stopList.get(i).getTotalWaitingTime();
 
         }
-        System.out.println(1);
-        System.out.println("Ratio"+totalSimulationWaiting/totalNumSimulationWaiting );
 
+        System.out.println("AVG Waiting :"+totalSimulationWaiting/totalNumSimulationWaiting );
+
+        int numTrainDelay = 0;
         // Testing
-        /*
-        PassengersArrivingGenerator p = new PassengersArrivingGenerator();
-        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(6,15,0),"in"));
-        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(7,15,0),"in"));
-        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(9,15,0),"in"));
-        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(16,15,0),"in"));
-        System.out.println(p.getNumPassengers(CSStop,LocalTime.of(18,15,0),"in"));
-        */
+        for (int i=0;i<PNRStop.getDepartureDelayList().size();i++){
+         //   System.out.println(PNRStop.getDepartureDelayList().get(i));
+            if (PNRStop.getDepartureDelayList().get(i) > 60)
+                numTrainDelay++;
+        }
 
-        System.out.println(numberOfTrams(4));
+        for (int i=0;i<CSStop.getDepartureDelayList().size();i++){
+       //     System.out.println(CSStop.getDepartureDelayList().get(i));
+            if (CSStop.getDepartureDelayList().get(i) > 60)
+                numTrainDelay++;
+        }
+        int s = (CSStop.getDepartureDelayList().size()+PNRStop.getDepartureDelayList().size());
+        double r = (double) numTrainDelay /(double) s;
+        System.out.println("Num of trains delayed more than a minute"+ numTrainDelay+ " Ratio :"+r);
+
+        System.out.println(numberOfTrams(12));
     }
 
     public  static int numberOfTrams(int frequency)

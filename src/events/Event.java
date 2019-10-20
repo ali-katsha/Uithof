@@ -458,10 +458,15 @@ public class Event implements Comparable<Event>{
             long travelTime = ChronoUnit.SECONDS.between(tram.getPlannedArrivalTime(),tram.getDepartureTime());
             if (travelTime<0) travelTime = -1 *travelTime;
 
-            if (eventTime.equals(LocalTime.of(6,0,0)))
+            if (eventTime.isBefore(LocalTime.of(6,20,0)))
+            {
                 tram.setTravelTime(tram.getTravelTime()+travelTime);
-            else
+                System.out.println("HERE");
+            }
+            else{
             tram.setTravelTime(tram.getTravelTime()+travelTime+TURN_AROUND_TIME);
+                System.out.println("THERE");
+            }
             // End Calculate travel time
 
 
@@ -484,7 +489,20 @@ public class Event implements Comparable<Event>{
 
 
 
-            LocalTime possibleDeparture =  getEventTime().plusSeconds(TURN_AROUND_TIME);
+            LocalTime possibleDeparture =  getEventTime().plusSeconds(0);
+
+
+        if (eventTime.isAfter(LocalTime.of(6,20,0)))
+        {
+            possibleDeparture =  getEventTime().plusSeconds(TURN_AROUND_TIME);
+
+        }
+        else{
+
+        }
+
+
+
             if (eventTime.equals(LocalTime.of(6,0,0)))
                 possibleDeparture =  getEventTime().plusSeconds(0);
 
@@ -501,13 +519,15 @@ public class Event implements Comparable<Event>{
             if (possibleDeparture.isAfter(plannedDepartureEndStop)) {
                 tram.setDepartureTime(possibleDeparture);
                 departure = new Event(4,possibleDeparture,tram);
-                endStop.addDepartureDelay(ChronoUnit.SECONDS.between(plannedDepartureEndStop,possibleDeparture));
+                if (eventTime.isBefore(CALCULATION_END_TIME) && eventTime.isAfter(CALCULATION_START_TIME))
+                    endStop.addDepartureDelay(ChronoUnit.SECONDS.between(plannedDepartureEndStop,possibleDeparture));
 
             }
             else {
                 tram.setDepartureTime(plannedDepartureEndStop);
                 departure = new Event(4, plannedDepartureEndStop, tram);
-                endStop.addDepartureDelay((long)0);
+                if (eventTime.isBefore(CALCULATION_END_TIME) && eventTime.isAfter(CALCULATION_START_TIME))
+                    endStop.addDepartureDelay((long)0);
             }
 
             System.out.println("--------------------------------");
