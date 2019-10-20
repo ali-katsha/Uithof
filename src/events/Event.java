@@ -2,6 +2,7 @@ package events;
 
 import entities.*;
 import generators.DrivingTimeGenerator;
+import generators.DwellTimeGenerator;
 import generators.PassengersArrivingGenerator;
 import generators.PassengersOutGenerator;
 
@@ -134,7 +135,9 @@ public class Event implements Comparable<Event>{
 
 
             // Calculate travel time
-            double dwellTime = 12.5 + 0.22* passengersCounter + 0.13 * passengersOut;
+            double dwellTime = DwellTimeGenerator.generateDwellTime(passengersCounter,passengersOut);
+            System.out.println("new Dwell Time:"+ dwellTime);
+            System.out.println("old Dwell Time:"+ 12.5 + 0.22* passengersCounter + 0.13 * passengersOut);
 
             long travelTime = ChronoUnit.SECONDS.between(tram.getPlannedArrivalTime(),tram.getDepartureTime());
             if (travelTime<0) travelTime = -1 *travelTime;

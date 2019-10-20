@@ -35,8 +35,8 @@ public class Main {
                 List<Stop> stopList = new ArrayList<>();
 
                 // calculate timetable
-                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0,TURN_AROUND_TIME_MINUTES);
-                TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,15,TURN_AROUND_TIME_MINUTES);
+                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,2,TURN_AROUND_TIME_MINUTES);
+                TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0,TURN_AROUND_TIME_MINUTES);
 
                 //init events and lists
                 PriorityQueue<Event> eventQueue = new PriorityQueue<>();
