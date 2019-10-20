@@ -20,7 +20,7 @@ public class Event implements Comparable<Event>{
     private Stop stop;
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
-    private static final long TURN_AROUND_TIME = 180;
+    private static final long TURN_AROUND_TIME = 240;
 
 
 

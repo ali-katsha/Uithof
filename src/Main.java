@@ -111,7 +111,7 @@ public class Main {
 
 
         PriorityQueue<Event> eventQueue = new PriorityQueue<>();
-        for(int i=0;i<5;i++) {
+        for(int i=0;i<4;i++) {
             Tram tram = new Tram();
             tram.setNextStop(CSStop);
             tram.setCurrentStop(CSStop);
@@ -134,7 +134,7 @@ public class Main {
 
         }
 
-        for(int i=0;i<4;i++) {
+        for(int i=0;i<5;i++) {
             Tram tram = new Tram();
             tram.setCurrentStop(PNRStop);
             tram.setNextStop(PNRStop);
