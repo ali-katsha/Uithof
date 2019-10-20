@@ -14,7 +14,7 @@ public class TimeTableGenerator  {
         List<LocalTime> plannedArrival = new ArrayList();
         List<LocalTime> plannedDeparture= new ArrayList();
 
-        LocalTime time = startTime.plusMinutes(offset);
+        LocalTime time = startTime.plusSeconds(offset);
 
         while (time.isBefore(endtime))
         {
