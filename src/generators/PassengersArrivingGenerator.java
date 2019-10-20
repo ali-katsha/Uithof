@@ -41,7 +41,6 @@ public class PassengersArrivingGenerator {
     public static int getNumPassengers(Stop stop, LocalTime time) throws IOException {
             return getNumPassengersValidation(stop,time,3);
             /*double mean = getStopMean(stop, time);
-         //   System.out.println(mean);
             double p = 1.0;
             int k = 0;
             int step = 600;
