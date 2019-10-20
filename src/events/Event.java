@@ -21,6 +21,8 @@ public class Event implements Comparable<Event>{
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
     private static final long TURN_AROUND_TIME = 240;
+    private static final int SWITCH_STRAIGHT_TIME = 60;
+    private static final int SWITCH_SKEWED_TIME = 0;
 
 
 
@@ -253,10 +255,10 @@ public class Event implements Comparable<Event>{
                 else{
                     if (stop.getTram_B() == null){
                         System.out.println("Tram" + tram.getTramNum() + "incoming, skewed");
-                        Event event= new Event(6,eventTime.plusSeconds(60),tram);
+                        Event event= new Event(6,eventTime.plusSeconds(SWITCH_SKEWED_TIME),tram);
 
-                        if (eventTime.plusSeconds(60).isAfter(tram.getPlannedArrivalTime()))
-                            tram.setPlannedArrivalTime(eventTime.plusSeconds(60));
+                        if (eventTime.plusSeconds(SWITCH_SKEWED_TIME).isAfter(tram.getPlannedArrivalTime()))
+                            tram.setPlannedArrivalTime(eventTime.plusSeconds(SWITCH_SKEWED_TIME));
 
                         eventQueue.add(event);
                         aSwitch.Set_skewed_in_busy(true);
@@ -265,7 +267,10 @@ public class Event implements Comparable<Event>{
                     }
                     else if (stop.getTram_A() == null){
                         System.out.println("Tram" + tram.getTramNum() + "incoming, straight");
-                        Event event= new Event(6,eventTime,tram);
+                        Event event= new Event(6,eventTime.plusSeconds(SWITCH_STRAIGHT_TIME),tram);
+
+                        if (eventTime.plusSeconds(SWITCH_STRAIGHT_TIME).isAfter(tram.getPlannedArrivalTime()))
+                            tram.setPlannedArrivalTime(eventTime.plusSeconds(SWITCH_STRAIGHT_TIME));
                         eventQueue.add(event);
                         aSwitch.Set_straight_in_busy(true);
                         stop.setTram_A(tram);
@@ -294,8 +299,8 @@ public class Event implements Comparable<Event>{
                 else{
                     if (stop.getTram_A() == tram){
                         System.out.println("Tram" + tram.getTramNum() + "outgoing, skewed");
-                        Event event = new Event(6, eventTime.plusSeconds(60), tram);
-                        tram.setPlannedArrivalTime(tram.getPlannedArrivalTime().plusSeconds(60));
+                        Event event = new Event(6, eventTime.plusSeconds(SWITCH_SKEWED_TIME), tram);
+                        tram.setPlannedArrivalTime(tram.getPlannedArrivalTime().plusSeconds(SWITCH_SKEWED_TIME));
                         eventQueue.add(event);
                         aSwitch.Set_skewed_out_busy(true);
                         stop.setTram_A(null);
@@ -303,7 +308,8 @@ public class Event implements Comparable<Event>{
                     }
                     else if (stop.getTram_B() == tram){
                         System.out.println("Tram" + tram.getTramNum() + "outgoing, straight");
-                        Event event = new Event(6, eventTime, tram);
+                        Event event = new Event(6, eventTime.plusSeconds(SWITCH_STRAIGHT_TIME), tram);
+                        tram.setPlannedArrivalTime(tram.getPlannedArrivalTime().plusSeconds(SWITCH_STRAIGHT_TIME));
                         eventQueue.add(event);
                         aSwitch.Set_straight_out_busy(true);
                         stop.setTram_B(null);
