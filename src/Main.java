@@ -14,72 +14,87 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         int frequency = 12;
+        int numRuns = 1;
 
-        //vars
-        LocalTime simulationClock = LocalTime.of(0, 0, 0);
-        LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
-        LocalTime simulationEndTime = LocalTime.of(22, 0, 0);
-        EndStop CSStop =  new EndStop("CS",1);
-        EndStop PNRStop =  new EndStop("PNR",9);
-        List<Stop> routeCSPNR = new ArrayList<Stop>();
-        List<Stop> routePNRCS = new ArrayList<Stop>();
-        List<Stop> stopList = new ArrayList<>();
+        double globalPercentageWaiting=0;
+        long globalMaxDelay = 0;
+        long globalMaxWaiting =0;
+        double globalAvgWaiting = 0 ;
 
-        // calculate timetable
-        TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0);
-        TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,15);
+        for(int indexRun = 0;indexRun <numRuns;indexRun++){
 
-        //init events and lists
-        PriorityQueue<Event> eventQueue = new PriorityQueue<>();
-        initStops( routeCSPNR,routePNRCS, stopList, CSStop,PNRStop);
-        initTramEvents(eventQueue, frequency, CSStop,  PNRStop, simulationStartTime);
-        initArrivingPassengersEvents(eventQueue,stopList,simulationStartTime);
+                System.out.println("*********************** Run"+ indexRun +" *********************");
+                //vars
+                LocalTime simulationClock = LocalTime.of(0, 0, 0);
+                LocalTime simulationStartTime = LocalTime.of(6, 0, 0);
+                LocalTime simulationEndTime = LocalTime.of(22, 0, 0);
+                EndStop CSStop =  new EndStop("CS",1);
+                EndStop PNRStop =  new EndStop("PNR",9);
+                List<Stop> routeCSPNR = new ArrayList<Stop>();
+                List<Stop> routePNRCS = new ArrayList<Stop>();
+                List<Stop> stopList = new ArrayList<>();
+
+                // calculate timetable
+                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0);
+                TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,15);
+
+                //init events and lists
+                PriorityQueue<Event> eventQueue = new PriorityQueue<>();
+                initStops( routeCSPNR,routePNRCS, stopList, CSStop,PNRStop);
+                initTramEvents(eventQueue, frequency, CSStop,  PNRStop, simulationStartTime);
+                initArrivingPassengersEvents(eventQueue,stopList,simulationStartTime);
 
 
-        while (true){
-            Event event = eventQueue.remove();
-            simulationClock = event.getEventTime();
-            eventQueue = event.eventHandler(eventQueue,routeCSPNR,routePNRCS);
-            if(event.getEventTime().isAfter(simulationEndTime)){
-                System.out.println("Simulation Ended");
-                break;
-            }
+                while (true){
+                    Event event = eventQueue.remove();
+                    simulationClock = event.getEventTime();
+                    eventQueue = event.eventHandler(eventQueue,routeCSPNR,routePNRCS);
+                    if(event.getEventTime().isAfter(simulationEndTime)){
+                        System.out.println("Simulation Ended");
+                        break;
+                    }
+                }
+                System.out.println("------------Stats----------");
+                long totalNumSimulationWaiting =0;
+                long totalSimulationWaiting =0;
+                long maxWaiting =0;
+
+                for (int i =0 ; i<stopList.size();i++){
+               //     System.out.println("Stop" + stopList.get(i).getStopNumber()+" -"+stopList.get(i).getName());
+              //      System.out.println("Max waiting : " + stopList.get(i).getMaxWaitingTime());
+                //    System.out.println(" # Passengers waiting : " + stopList.get(i).getNumWaitPassenger());
+                  //  System.out.println(" waiting time : " + stopList.get(i).getTotalWaitingTime());
+                    totalNumSimulationWaiting += stopList.get(i).getNumWaitPassenger();
+                    totalSimulationWaiting +=stopList.get(i).getTotalWaitingTime();
+                    if (stopList.get(i).getMaxWaitingTime()>maxWaiting) maxWaiting=stopList.get(i).getMaxWaitingTime();
+
+                }
+                double avgWaiting = (double)totalSimulationWaiting/(double)totalNumSimulationWaiting;
+                System.out.println("AVG Waiting :"+ avgWaiting);
+                System.out.println("MAx Waiting :"+ maxWaiting);
+
+                int numTrainDelay = 0;
+                long maxDelay = 0;
+                // Testing
+                for (int i=0;i<PNRStop.getDepartureDelayList().size();i++){
+                 //   System.out.println(PNRStop.getDepartureDelayList().get(i));
+                    if (PNRStop.getDepartureDelayList().get(i) > 60)
+                        numTrainDelay++;
+                    if (PNRStop.getDepartureDelayList().get(i) > maxDelay) maxDelay =PNRStop.getDepartureDelayList().get(i);
+
+                }
+
+                for (int i=0;i<CSStop.getDepartureDelayList().size();i++){
+               //     System.out.println(CSStop.getDepartureDelayList().get(i));
+                    if (CSStop.getDepartureDelayList().get(i) > 60)
+                        numTrainDelay++;
+                    if (CSStop.getDepartureDelayList().get(i) > maxDelay) maxDelay=CSStop.getDepartureDelayList().get(i);
+                }
+                int s = (CSStop.getDepartureDelayList().size()+PNRStop.getDepartureDelayList().size());
+                double percentageWaiting = (double) numTrainDelay /(double) s;
+                System.out.println("Percentage of trams delayed more than a minute :" + percentageWaiting*100);
+                System.out.println("Max delayed tram :" + maxDelay);
         }
-        System.out.println("------------Stats----------");
-        long totalNumSimulationWaiting =0;
-        long totalSimulationWaiting =0;
-
-        for (int i =0 ; i<stopList.size();i++){
-       //     System.out.println("Stop" + stopList.get(i).getStopNumber()+" -"+stopList.get(i).getName());
-      //      System.out.println("Max waiting : " + stopList.get(i).getMaxWaitingTime());
-        //    System.out.println(" # Passengers waiting : " + stopList.get(i).getNumWaitPassenger());
-          //  System.out.println(" waiting time : " + stopList.get(i).getTotalWaitingTime());
-            totalNumSimulationWaiting += stopList.get(i).getNumWaitPassenger();
-            totalSimulationWaiting +=stopList.get(i).getTotalWaitingTime();
-
-        }
-
-        System.out.println("AVG Waiting :"+totalSimulationWaiting/totalNumSimulationWaiting );
-
-        int numTrainDelay = 0;
-        long maxDelay = 0;
-        // Testing
-        for (int i=0;i<PNRStop.getDepartureDelayList().size();i++){
-         //   System.out.println(PNRStop.getDepartureDelayList().get(i));
-            if (PNRStop.getDepartureDelayList().get(i) > 60)
-                numTrainDelay++;
-
-        }
-
-        for (int i=0;i<CSStop.getDepartureDelayList().size();i++){
-       //     System.out.println(CSStop.getDepartureDelayList().get(i));
-            if (CSStop.getDepartureDelayList().get(i) > 60)
-                numTrainDelay++;
-        }
-        int s = (CSStop.getDepartureDelayList().size()+PNRStop.getDepartureDelayList().size());
-        double r = (double) numTrainDelay /(double) s;
-        System.out.println("Percentage of trams delayed more than a minute :" + r*100);
-
 
     }
 
