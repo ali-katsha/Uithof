@@ -10,7 +10,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class Main {
-    private static final long TURN_AROUND_TIME_MINUTES = 4;
+    private static final int TURN_AROUND_TIME_MINUTES = 4;
 
     public static void main(String[] args) throws IOException {
         int frequency = 12;
@@ -35,8 +35,8 @@ public class Main {
                 List<Stop> stopList = new ArrayList<>();
 
                 // calculate timetable
-                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0);
-                TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,15);
+                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0,TURN_AROUND_TIME_MINUTES);
+                TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,15,TURN_AROUND_TIME_MINUTES);
 
                 //init events and lists
                 PriorityQueue<Event> eventQueue = new PriorityQueue<>();
@@ -110,7 +110,6 @@ public class Main {
     public static void initTramEvents(PriorityQueue<Event> eventQueue,int frequency,EndStop CSStop, EndStop PNRStop,LocalTime simulationStartTime){
         double PNR =  Math.ceil((17+TURN_AROUND_TIME_MINUTES)/(60/(double)frequency));
         double CS =  Math.floor((17+TURN_AROUND_TIME_MINUTES)/(60/(double)frequency));
-        System.out.println("CSSS"+CS + "PNR:"+PNR);
         for(int i=0;i<CS;i++) {
             Tram tram = new Tram();
             tram.setNextStop(CSStop);
@@ -118,7 +117,6 @@ public class Main {
             tram.setTramNum(i + 1);
             LocalTime t =  LocalTime.of(simulationStartTime.getHour(),simulationStartTime.getMinute(),simulationStartTime.getSecond());
             t=t.plusMinutes((i*60/frequency) - 1);
-            System.out.println(t);
             tram.setDepartureTime(t);
             tram.setPlannedArrivalTime(t);
             tram.setDirection(0);
@@ -134,7 +132,6 @@ public class Main {
             tram.setTramNum(i+10);
             LocalTime t =  LocalTime.of(simulationStartTime.getHour(),simulationStartTime.getMinute(),simulationStartTime.getSecond());
             t=t.plusMinutes((i*60/frequency)-1 );
-            System.out.println(t);
             tram.setDepartureTime(t);
             tram.setPlannedArrivalTime(t);
             tram.setDirection(0);
