@@ -21,6 +21,8 @@ public class Event implements Comparable<Event>{
     private Stop stop;
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
+    //change in main
+    private static final int NUM = 10;
     private static final long TURN_AROUND_TIME = 240;
     private static final int SWITCH_STRAIGHT_TIME = 60;
     private static final int SWITCH_SKEWED_TIME = 0;
@@ -81,7 +83,6 @@ public class Event implements Comparable<Event>{
     PriorityQueue<Event> eventHandlerArrivingStop(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS) throws IOException {
 
 
-    //    System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime);
 
         if (tram.getNextStop().getWaitingTrams().peek() == tram){
             if (!tram.getPlannedArrivalTime().equals(eventTime)){
@@ -136,8 +137,8 @@ public class Event implements Comparable<Event>{
 
             // Calculate travel time
             double dwellTime = DwellTimeGenerator.generateDwellTime(passengersCounter,passengersOut);
-            System.out.println("new Dwell Time:"+ dwellTime);
-            System.out.println("old Dwell Time:"+ 12.5 + 0.22* passengersCounter + 0.13 * passengersOut);
+  //          System.out.println("new Dwell Time:"+ dwellTime);
+//            System.out.println("old Dwell Time:"+ 12.5 + 0.22* passengersCounter + 0.13 * passengersOut);
 
             long travelTime = ChronoUnit.SECONDS.between(tram.getPlannedArrivalTime(),tram.getDepartureTime());
             if (travelTime<0) travelTime = -1 *travelTime;
@@ -153,6 +154,8 @@ public class Event implements Comparable<Event>{
             //setup departure time
             LocalTime departureTime = tram.getPlannedArrivalTime().plusSeconds((long)dwellTime);
             Event departure = new Event(2,departureTime,tram);
+            if (tram.getTramNum() == NUM)
+            System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime + " travel time "+tram.getTravelTime()/60.0 + " station"+tram.getCurrentStop().getName());
 
             eventQueue.add(departure);
             return eventQueue;
@@ -183,7 +186,8 @@ public class Event implements Comparable<Event>{
             }
         }
         long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
-       // System.out.println(" Driving time"+drivingTime);
+if (tram.getTramNum() == NUM)
+        System.out.println("Departure, Tram:"+tram.getTramNum()+" Driving time"+drivingTime+ " Station"+tram.getCurrentStop().getName());
 
         if (tram.getNextStop()== routeCSPNR.get(0) || tram.getNextStop()== routePNRCS.get(0) ){
             Event arrivingSwitchEvent = new Event(5, eventTime.plusSeconds(drivingTime), this.tram);
@@ -346,7 +350,10 @@ public class Event implements Comparable<Event>{
             }
 
             long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
-           // System.out.println(" Driving time"+drivingTime);
+            if (tram.getTramNum() ==NUM)
+            System.out.println("Departure Switch, Tram:"+tram.getTramNum()+" Driving time "+drivingTime+ " Station"+tram.getCurrentStop().getName());
+
+            // System.out.println(" Driving time"+drivingTime);
 
             tram.setPlannedArrivalTime(eventTime.plusSeconds(drivingTime));
             tram.getNextStop().addTramtoWaitingTrams(tram);
@@ -414,6 +421,7 @@ public class Event implements Comparable<Event>{
 
             // Calculate travel time and dwell time for OUT ONLY
             long travelTime = ChronoUnit.SECONDS.between(tram.getPlannedArrivalTime(),tram.getDepartureTime());
+           // System.out.println("tram.getPlannedArrivalTime()"+tram.getPlannedArrivalTime()+"+tram.getDepartureTime() "+tram.getDepartureTime());
             if (travelTime<0) travelTime = -1 *travelTime;
 
             if (eventTime.isBefore(LocalTime.of(6,20,0)))
@@ -456,10 +464,11 @@ public class Event implements Comparable<Event>{
 
 
             Event departure;
-
-            System.out.println("Arriving "+ tram.getCurrentStop().getName()+ "  STOP, Tram:"+tram.getTramNum()+" Time:"+eventTime);
-            System.out.println("Travel time "+tram.getTravelTime()/60.0);
-            System.out.println("possible departure "+possibleDeparture + " plannedDepartureEndStop "+plannedDepartureEndStop);
+        if (tram.getTramNum() ==NUM) {
+            System.out.println("Arriving " + tram.getCurrentStop().getName() + "  STOP, Tram:" + tram.getTramNum() + " Time:" + eventTime);
+            System.out.println("Travel time " + tram.getTravelTime() / 60.0);
+            System.out.println("possible departure " + possibleDeparture + " plannedDepartureEndStop " + plannedDepartureEndStop);
+        }
             tram.setTravelTime(0);
 
             if (possibleDeparture.isAfter(plannedDepartureEndStop)) {
@@ -484,7 +493,8 @@ public class Event implements Comparable<Event>{
     PriorityQueue<Event> eventHandlerDepartureEndStop(PriorityQueue<Event> eventQueue,List<Stop> routeCSPNR ,List<Stop> routePNRCS){
         // set free and schedule new arriving
         if (!tram.getCurrentStop().getWaitingTrams().isEmpty()){
-            System.out.print("Departure, Tram:"+tram.getTramNum()+" Time:"+eventTime+" - Departure from stop : "+tram.getCurrentStop().getName()+" - "+tram.getCurrentStop().getStopNumber());
+            if (tram.getTramNum() == NUM)
+                System.out.print("Departure, Tram:"+tram.getTramNum()+" Time:"+eventTime+" - Departure from stop : "+tram.getCurrentStop().getName()+" - "+tram.getCurrentStop().getStopNumber());
 
             tram.getCurrentStop().setBusy(false);
             tram.getCurrentStop().getWaitingTrams().remove();
