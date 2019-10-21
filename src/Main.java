@@ -10,16 +10,19 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class Main {
-    //change in event
-    private static final int TURN_AROUND_TIME_MINUTES = 4;
+    //change it only in event.class
+    private static int TURN_AROUND_TIME_MINUTES ;
 
     public static void main(String[] args) throws IOException {
-        int frequency = 12;
-        int numRuns = 1;
 
-        double globalPercentageWaiting=0;
-        long globalMaxDelay = 0;
-        long globalMaxWaiting =0;
+        TURN_AROUND_TIME_MINUTES=(int)Event.TURN_AROUND_TIME/60;
+        int frequency = Event.Frequency;
+
+        int numRuns = 3;
+
+        double globalPercentageDelay=0;
+        double globalMaxDelay = 0;
+        double globalMaxWaiting =0;
         double globalAvgWaiting = 0 ;
 
         for(int indexRun = 0;indexRun <numRuns;indexRun++){
@@ -92,10 +95,31 @@ public class Main {
                     if (CSStop.getDepartureDelayList().get(i) > maxDelay) maxDelay=CSStop.getDepartureDelayList().get(i);
                 }
                 int s = (CSStop.getDepartureDelayList().size()+PNRStop.getDepartureDelayList().size());
-                double percentageWaiting = (double) numTrainDelay /(double) s;
-                System.out.println("Percentage of trams delayed more than a minute :" + percentageWaiting*100);
+                double percentageDelay = (double) numTrainDelay /(double) s;
+
+                System.out.println("Percentage of trams delayed more than a minute :" + percentageDelay*100);
                 System.out.println("Max delayed tram :" + maxDelay);
+
+                globalPercentageDelay += percentageDelay;
+                globalMaxWaiting +=maxWaiting;
+                globalMaxDelay += maxDelay;
+                globalAvgWaiting += avgWaiting;
         }
+
+        globalPercentageDelay = globalPercentageDelay/ (double) numRuns;
+        globalMaxWaiting =globalMaxWaiting / (double) numRuns;
+        globalMaxDelay = globalMaxDelay/ (double) numRuns;
+        globalAvgWaiting = globalAvgWaiting/ (double) numRuns;
+        System.out.println();
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$ Stats over "+ numRuns+ " runs $$$$$$$$$$$$$$$$$$$$$$$$$$");
+        System.out.println("AVG Waiting :"+ globalAvgWaiting);
+        System.out.println("MAx Waiting :"+ globalMaxWaiting);
+
+        System.out.println("Percentage of trams delayed more than a minute :" + globalPercentageDelay*100);
+        System.out.println("Max delayed tram :" + globalMaxDelay);
+
+
+
 
     }
 
