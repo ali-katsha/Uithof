@@ -36,7 +36,7 @@ public class Main {
                 List<Stop> stopList = new ArrayList<>();
 
                 // calculate timetable
-                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,150,TURN_AROUND_TIME_MINUTES);
+                TimeTableGenerator.generateTimeTable(CSStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,(int)(((17+TURN_AROUND_TIME_MINUTES)%(60.0/frequency))*60),TURN_AROUND_TIME_MINUTES);
                 TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0,TURN_AROUND_TIME_MINUTES);
 
                 //init events and lists

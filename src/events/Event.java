@@ -24,8 +24,8 @@ public class Event implements Comparable<Event>{
     //change in main
     private static final int NUM = 10;
     private static final long TURN_AROUND_TIME = 240;
-    private static final int SWITCH_STRAIGHT_TIME = 60;
-    private static final int SWITCH_SKEWED_TIME = 0;
+    private static final int SWITCH_STRAIGHT_TIME = 0;
+    private static final int SWITCH_SKEWED_TIME = 60;
 
 
 
@@ -187,7 +187,7 @@ public class Event implements Comparable<Event>{
         }
         long drivingTime = DrivingTimeGenerator.generateDrivingTime(tram.getCurrentStop(),tram.getNextStop());
 if (tram.getTramNum() == NUM)
-        System.out.println("Departure, Tram:"+tram.getTramNum()+" Driving time"+drivingTime+ " Station"+tram.getCurrentStop().getName());
+        System.out.println("Departure, Tram:"+tram.getTramNum()+" Driving time"+drivingTime/60.0+ " Station"+tram.getCurrentStop().getName());
 
         if (tram.getNextStop()== routeCSPNR.get(0) || tram.getNextStop()== routePNRCS.get(0) ){
             Event arrivingSwitchEvent = new Event(5, eventTime.plusSeconds(drivingTime), this.tram);

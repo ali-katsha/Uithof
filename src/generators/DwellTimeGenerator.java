@@ -12,8 +12,10 @@ public class DwellTimeGenerator {
 
         do {
             dwellTime = dwellDist.sample();
-        } while (dwellTime < (d*0.8));
+        } while (dwellTime < (d*0.8) || dwellTime > 1.6*d);
 
         return dwellTime;
+        //return d;
+        //return 0;
     }
 }
