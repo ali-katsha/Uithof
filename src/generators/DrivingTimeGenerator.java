@@ -13,6 +13,7 @@ public  class DrivingTimeGenerator {
     public static long generateDrivingTime(Stop currentStop, Stop nextStop ){
         Random rand = new Random();
         int n = rand.nextInt(50);
+        //return (long)generateRealDrivingTime(currentStop);
         if (n>25)
         //return 10;
             return (long)generateDrivingTimeValidation(currentStop);
@@ -21,7 +22,7 @@ public  class DrivingTimeGenerator {
             return (long)generateDrivingTimeValidation(currentStop);
     }
 
-    public double generateRealDrivingTime(Stop currentStop){
+    public static double generateRealDrivingTime(Stop currentStop){
         // Mean, Shape
         double data[][] = {{0,134,243,59,101,60,86,78,113,110,0,78,82,60,100,59,243,135}, //AvgDrivingTime
                 {1,4.895792,5.491013,4.075489,4.613072,4.092296,4.452299,4.354661,4.72534,4.698432,1,4.354661,4.404671,4.092296,4.603122,4.075489,5.491013,4.903227}

@@ -2,7 +2,7 @@ package events;
 
 import java.time.LocalTime;
 
-public class Event implements Comparable<Event>{
+public abstract class Event implements Comparable<Event>{
     public int eventType;
     public LocalTime eventTime;
 

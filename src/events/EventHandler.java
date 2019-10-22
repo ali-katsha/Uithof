@@ -21,9 +21,16 @@ public class EventHandler{
 
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
-    private static final long TURN_AROUND_TIME = 240;
-    private static final int SWITCH_STRAIGHT_TIME = 60;
-    private static final int SWITCH_SKEWED_TIME = 0;
+
+    public static final int Frequency = 12;
+    public static final long TURN_AROUND_TIME = 240;
+
+    private static final int SWITCH_STRAIGHT_TIME = 0;
+    private static final int SWITCH_SKEWED_TIME = 60;
+
+    private static final int NUM = 10;
+    private static final boolean PRINT = false;
+    private static final boolean PRINT_ALL = false;
 
     public EventHandler(List<Stop> routeCSPNR , List<Stop> routePNRCS) {
         eventQueue = new PriorityQueue<Event>();
@@ -142,6 +149,11 @@ public class EventHandler{
             //setup departure time
             LocalTime departureTime = tram.getPlannedArrivalTime().plusSeconds((long)dwellTime);
             TramEvent departure = new TramEvent(2,departureTime,tram);
+
+            if (PRINT)
+                if (tram.getTramNum() == NUM||PRINT_ALL)
+                    System.out.println("Arriving, Tram:"+tram.getTramNum()+" Time:"+eventTime + " travel time "+tram.getTravelTime()/60.0 + " station"+tram.getCurrentStop().getName());
+
             eventQueue.add(departure);
         }
     }
@@ -165,6 +177,10 @@ public class EventHandler{
         }
 
         long drivingTime = DrivingTimeGenerator.generateDrivingTime(stop,tram.getNextStop());
+
+        if (PRINT)
+            if (tram.getTramNum() == NUM||PRINT_ALL)
+                System.out.println("Departure, Tram:"+tram.getTramNum()+" Driving time"+drivingTime/60.0+ " Station"+tram.getCurrentStop().getName());
 
         if (tram.getNextStop()== routeCSPNR.get(0) || tram.getNextStop()== routePNRCS.get(0) ){
             TramEvent arrivingSwitchEvent = new TramEvent(5, eventTime.plusSeconds(drivingTime), tram);
@@ -288,6 +304,10 @@ public class EventHandler{
             }
 
             long drivingTime = DrivingTimeGenerator.generateDrivingTime(stop,tram.getNextStop());
+            if (PRINT)
+                if (tram.getTramNum() ==NUM||PRINT_ALL)
+                    System.out.println("Departure Switch, Tram:"+tram.getTramNum()+" Driving time "+drivingTime+ " Station"+tram.getCurrentStop().getName());
+
             tram.setPlannedArrivalTime(eventTime.plusSeconds(drivingTime));
             tram.getNextStop().addTramtoWaitingTrams(tram);
 
@@ -371,9 +391,15 @@ public class EventHandler{
                 possibleDeparture =  eventTime.plusSeconds(0);
 
             TramEvent departure;
-            System.out.println("Arriving "+ tram.getCurrentStop().getName()+ "  STOP, Tram:"+tram.getTramNum()+" Time:"+eventTime);
-            System.out.println("Travel time "+tram.getTravelTime()/60.0);
-            System.out.println("possible departure "+possibleDeparture + " plannedDepartureEndStop "+plannedDepartureEndStop);
+            if (PRINT){
+                if (tram.getTramNum() ==NUM || PRINT_ALL) {
+                    System.out.println("--------------------------------");
+                    System.out.println("Arriving " + tram.getCurrentStop().getName() + "  STOP, Tram:" + tram.getTramNum() + " Time:" + eventTime);
+                    System.out.println("Travel time " + tram.getTravelTime() / 60.0);
+                    System.out.println("possible departure " + possibleDeparture + " plannedDepartureEndStop " + plannedDepartureEndStop);
+                    System.out.println("--------------------------------");
+                }
+            }
             tram.setTravelTime(0);
 
             if (possibleDeparture.isAfter(plannedDepartureEndStop)) {
@@ -389,7 +415,6 @@ public class EventHandler{
                 if (eventTime.isBefore(CALCULATION_END_TIME) && eventTime.isAfter(CALCULATION_START_TIME))
                     endStop.addDepartureDelay((long)0);
             }
-            System.out.println("--------------------------------");
 
             eventQueue.add(departure);
     }
@@ -400,7 +425,9 @@ public class EventHandler{
         EndStop stop = (EndStop) tram.getCurrentStop();
 
         if (!stop.getWaitingTrams().isEmpty()){
-            System.out.print("Departure, Tram:"+tram.getTramNum()+" Time:"+eventTime+" - Departure from stop : "+stop.getName()+" - "+stop.getStopNumber());
+            if (PRINT)
+                if (tram.getTramNum() == NUM||PRINT_ALL)
+                    System.out.print("Departure, Tram:"+tram.getTramNum()+" Time:"+eventTime+" - Departure from stop : "+tram.getCurrentStop().getName()+" - "+tram.getCurrentStop().getStopNumber());
 
             stop.setBusy(false);
             stop.getWaitingTrams().remove();

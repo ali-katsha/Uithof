@@ -58,7 +58,7 @@ public class EndStop extends Stop{
     }
 
     public void addDepartureDelay(Long delay){
-        System.out.println("Delay"+delay);
+      //  System.out.println("Delay"+delay);
         departureDelayList.add(delay);
 
     }
