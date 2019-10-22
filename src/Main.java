@@ -1,8 +1,9 @@
 import entities.EndStop;
 import entities.Stop;
 import entities.Tram;
-import events.Event;
-import generators.PassengersArrivingGenerator;
+import events.EventHandler;
+import events.PassengerEvent;
+import events.TramEvent;
 import generators.TimeTableGenerator;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        TURN_AROUND_TIME_MINUTES=(int)Event.TURN_AROUND_TIME/60;
-        int frequency = Event.Frequency;
+        TURN_AROUND_TIME_MINUTES=(int)EventHandler.TURN_AROUND_TIME/60;
+        int frequency = EventHandler.Frequency;
 
         int numRuns = 25;
 
@@ -43,21 +44,25 @@ public class Main {
                 TimeTableGenerator.generateTimeTable(PNRStop, simulationStartTime,simulationEndTime.plusHours(1),frequency,0,TURN_AROUND_TIME_MINUTES);
 
                 //init events and lists
-                PriorityQueue<Event> eventQueue = new PriorityQueue<>();
                 initStops( routeCSPNR,routePNRCS, stopList, CSStop,PNRStop);
-                initTramEvents(eventQueue, frequency, CSStop,  PNRStop, simulationStartTime);
-                initArrivingPassengersEvents(eventQueue,stopList,simulationStartTime);
-
+                EventHandler handler = new EventHandler(routeCSPNR, routePNRCS);
+                initTramEvents(handler, frequency, CSStop,  PNRStop, simulationStartTime);
+                initArrivingPassengersEvents(handler,stopList,simulationStartTime);
 
                 while (true){
-                    Event event = eventQueue.remove();
-                    simulationClock = event.getEventTime();
-                    eventQueue = event.eventHandler(eventQueue,routeCSPNR,routePNRCS);
-                    if(event.getEventTime().isAfter(simulationEndTime)){
-                        System.out.println("Simulation Ended");
+                    LocalTime eventTime = handler.HandleEvent();
+
+                    if (eventTime == null){
+                        System.out.println("Simulation Ended, null");
+                        break;
+                    }
+
+                    if(eventTime.isAfter(simulationEndTime)){
+                        System.out.println("Simulation Ended, time");
                         break;
                     }
                 }
+
                 System.out.println("------------Stats----------");
                 long totalNumSimulationWaiting =0;
                 long totalSimulationWaiting =0;
@@ -123,16 +128,15 @@ public class Main {
 
     }
 
-    public static void initArrivingPassengersEvents(PriorityQueue<Event> eventQueue,List<Stop> stopList,LocalTime simulationStartTime){
+    public static void initArrivingPassengersEvents(EventHandler handler, List<Stop> stopList, LocalTime simulationStartTime){
 
         for (int i=0;i<stopList.size();i++){
-            Event eventPassengerArrival = new Event(7,simulationStartTime,stopList.get(i));
-            eventQueue.add(eventPassengerArrival);
-
+            PassengerEvent eventPassengerArrival = new PassengerEvent(7,simulationStartTime,stopList.get(i));
+            handler.addEvent(eventPassengerArrival);
         }
     }
 
-    public static void initTramEvents(PriorityQueue<Event> eventQueue,int frequency,EndStop CSStop, EndStop PNRStop,LocalTime simulationStartTime){
+    public static void initTramEvents(EventHandler handler, int frequency, EndStop CSStop, EndStop PNRStop, LocalTime simulationStartTime){
         double PNR =  Math.ceil((17+TURN_AROUND_TIME_MINUTES)/(60/(double)frequency));
         double CS =  Math.floor((17+TURN_AROUND_TIME_MINUTES)/(60/(double)frequency));
         System.out.println("Trams at CS"+ CS);
@@ -147,9 +151,9 @@ public class Main {
             tram.setDepartureTime(t);
             tram.setPlannedArrivalTime(t);
             tram.setDirection(0);
-            Event arriving = new Event(5, t, tram);
+            TramEvent arriving = new TramEvent(5, t, tram);
             CSStop.getaSwitch().addIncomming(tram);
-            eventQueue.add(arriving);
+            handler.addEvent(arriving);
         }
 
         for(int i=0;i<PNR;i++) {
@@ -162,11 +166,10 @@ public class Main {
             tram.setDepartureTime(t);
             tram.setPlannedArrivalTime(t);
             tram.setDirection(0);
-            Event arriving = new Event(5, t, tram);
+            TramEvent arriving = new TramEvent(5, t, tram);
             PNRStop.getaSwitch().addIncomming(tram);
-            eventQueue.add(arriving);
+            handler.addEvent(arriving);
         }
-
     }
 
     public static void initStops(List<Stop> routeCSPNR,List<Stop> routePNRCS,List<Stop> stopList,EndStop CSStop,EndStop PNRStop){
