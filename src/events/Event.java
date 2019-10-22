@@ -23,8 +23,10 @@ public class Event implements Comparable<Event>{
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
 
-    public static final int Frequency = 12;
-    public static final long TURN_AROUND_TIME = 240;
+    public static final int Frequency = 16;
+  //  public static final long TURN_AROUND_TIME = 180;
+//    public static final long TURN_AROUND_TIME = 240;
+    public static final long TURN_AROUND_TIME = 300;
 
     private static final int SWITCH_STRAIGHT_TIME = 0;
     private static final int SWITCH_SKEWED_TIME = 60;

@@ -26,8 +26,8 @@ public class PassengersOutGenerator {
     }
 
     public static int getNumPassengers(Tram tram, Stop stop, LocalTime time) throws IOException {
-        return getNumPassengersValidation(tram,stop,time,3);
-        /*
+        //return getNumPassengersValidation(tram,stop,time,3);
+
         double prob = getStopMean(stop, time);
         Random r = new Random();
         int counter = 0;
@@ -37,7 +37,7 @@ public class PassengersOutGenerator {
                 counter++;
             }
         }
-        return counter;*/
+        return counter;
     }
 
     private static double getStopMean(Stop stop, LocalTime time) throws IOException {
