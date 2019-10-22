@@ -43,8 +43,7 @@ public class EventHandler{
     }
 
     /* 1 : arrival at intermediate  stop , 2 : departure from intermediate stop, 3- Arriving at endpoint, 4-departure at end stop
-     * 5- arrival at switch , 6- departure from switch , 7- Changing tracks (cross), 8- going straight at switch,
-     * 9- passenger arrival
+     * 5- arrival at switch , 6- departure from switch , 7-passenger arrival
      * */
 
     public LocalTime  HandleEvent() throws IOException  {
@@ -71,7 +70,7 @@ public class EventHandler{
             case 6:
                 DepartureFromSwitch((TramEvent) event);
                 break;
-            case 9:
+            case 7:
                 passengerArrival((PassengerEvent) event);
                 break;
         }
@@ -88,7 +87,7 @@ public class EventHandler{
             stop.getPassengerQueue().add(new Passenger(eventTime,stop));
         }
 
-        PassengerEvent nextArrivingEvent = new PassengerEvent(9, eventTime.plusMinutes(15), stop);
+        PassengerEvent nextArrivingEvent = new PassengerEvent(7, eventTime.plusMinutes(15), stop);
         eventQueue.add(nextArrivingEvent);
     }
 

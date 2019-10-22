@@ -19,7 +19,7 @@ public class Main {
         TURN_AROUND_TIME_MINUTES=(int)EventHandler.TURN_AROUND_TIME/60;
         int frequency = EventHandler.Frequency;
 
-        int numRuns = 3;
+        int numRuns = 1;
 
         double globalPercentageDelay=0;
         double globalMaxDelay = 0;
@@ -131,7 +131,7 @@ public class Main {
     public static void initArrivingPassengersEvents(EventHandler handler, List<Stop> stopList, LocalTime simulationStartTime){
 
         for (int i=0;i<stopList.size();i++){
-            PassengerEvent eventPassengerArrival = new PassengerEvent(9,simulationStartTime,stopList.get(i));
+            PassengerEvent eventPassengerArrival = new PassengerEvent(7,simulationStartTime,stopList.get(i));
             handler.addEvent(eventPassengerArrival);
         }
     }
@@ -170,7 +170,7 @@ public class Main {
         }
     }
 
-    public static void initStops(    List<Stop> routeCSPNR,List<Stop> routePNRCS,List<Stop> stopList,EndStop CSStop,EndStop PNRStop){
+    public static void initStops(List<Stop> routeCSPNR,List<Stop> routePNRCS,List<Stop> stopList,EndStop CSStop,EndStop PNRStop){
         Stop stopB7 = new Stop( "Vaartsche Rijn", 0 ,17) ;
         Stop stopB6 = new Stop(  "Galgenwaard", 0,16 );
         Stop stopB5 = new Stop(  "De Kromme Rijn", 0 ,15);
