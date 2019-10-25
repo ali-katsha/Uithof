@@ -12,10 +12,6 @@ public class PassengersArrivingGenerator {
 
     public PassengersArrivingGenerator() { }
 
-    public static int getNumPassengers(Stop stop, LocalTime time) throws IOException {
-        return getNumPassengersValidation(stop,time,3);
-    }
-
     public static int getNumPassengersValidation(Stop stop, LocalTime time, int valNumber) throws IOException {
         double mean = getStopMeanForValidation(stop, time, valNumber);
        // System.out.println(mean);

@@ -131,7 +131,7 @@ public class Main {
     public static void initTramEvents(EventHandler handler, int frequency, EndStop CSStop, EndStop PNRStop, LocalTime simulationStartTime) {
         double PNR = Math.ceil((17 + TURN_AROUND_TIME_MINUTES) / (60 / (double) frequency));
         double CS = Math.floor((17 + TURN_AROUND_TIME_MINUTES) / (60 / (double) frequency));
-System.out.println("Trams at CS"+ CS);
+        System.out.println("Trams at CS"+ CS);
         System.out.println("Trams at PNR"+ PNR);
 
         for (int i = 0; i < CS; i++) {

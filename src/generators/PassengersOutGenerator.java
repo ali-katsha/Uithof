@@ -12,10 +12,6 @@ import java.util.Random;
 
 public class PassengersOutGenerator {
 
-    public static int getNumPassengers(Tram tram, Stop stop, LocalTime time) throws IOException {
-        return getNumPassengersValidation(tram,stop,time,3);
-    }
-
     public static int getNumPassengersValidation(Tram tram, Stop stop, LocalTime time, int valNumber) throws IOException {
                 double prob = getStopMeanValidation(stop, time, valNumber);
         Random r = new Random();
