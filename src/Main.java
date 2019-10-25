@@ -1,3 +1,9 @@
+/*
+    Jessica Bran    6652638
+    Ali Katsheh     6661548
+    Willem Jansen   6332153
+ */
+
 import entities.EndStop;
 import entities.Stop;
 import entities.Tram;
