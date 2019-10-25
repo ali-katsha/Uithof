@@ -39,6 +39,32 @@ public class PassengersArrivingGenerator {
         return k - 1;
     }
 
+    public static int getNumPassengers(Stop stop, LocalTime time) throws IOException {
+           // return getNumPassengersValidation(stop,time,3);
+            double mean = getStopMean(stop, time);
+            double p = 1.0;
+            int k = 0;
+            int step = 600;
+            do {
+                k++;
+                p *= Math.random();
+                while (p < 1 && mean > 0) {
+                    if (mean > step) {
+                        p *= Math.exp(step);
+                        mean -= step;
+                    } else {
+                        p *= Math.exp(mean);
+                        mean = 0;
+                    }
+                }
+            } while (p > 1);
+
+            return k - 1;
+
+
+    }
+
+
     private static double getStopMeanForValidation(Stop stop, LocalTime time, int valNumber) throws IOException {
         double[][] means;
         String fileName = "validation" + valNumber + "In";

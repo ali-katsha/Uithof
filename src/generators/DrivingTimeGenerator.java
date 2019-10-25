@@ -11,10 +11,13 @@ public  class DrivingTimeGenerator {
     public static long generateDrivingTime(Stop currentStop, Stop nextStop ){
         Random rand = new Random();
         int n = rand.nextInt(50);
-        if (n>25)
+        return (long)generateRealDrivingTime(currentStop);
+        /*if (n>25)
+        //return 10;
             return (long)generateDrivingTimeValidation(currentStop);
         else
-            return (long)generateDrivingTimeValidation(currentStop);
+            //return 10;
+             return (long)generateDrivingTimeValidation(currentStop);*/
     }
 
     public static double generateRealDrivingTime(Stop currentStop){

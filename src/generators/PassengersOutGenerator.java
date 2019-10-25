@@ -30,6 +30,21 @@ public class PassengersOutGenerator {
         return counter;
     }
 
+    public static int getNumPassengers(Tram tram, Stop stop, LocalTime time) throws IOException {
+        //return getNumPassengersValidation(tram,stop,time,3);
+
+        double prob = getStopMean(stop, time);
+        Random r = new Random();
+        int counter = 0;
+        for (int i = 0; i < tram.getPassengersNumber(); i++){
+            double random = r.nextFloat();
+            if (random < prob){
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     private static double getStopMean(Stop stop, LocalTime time) throws IOException {
         double[][] means;
 

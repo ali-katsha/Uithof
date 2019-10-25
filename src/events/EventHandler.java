@@ -22,7 +22,7 @@ public class EventHandler {
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
 
-    public static final int Frequency = 12;
+    public static final int Frequency = 2;
     public static final long TURN_AROUND_TIME = 240;
 
     private static final int SWITCH_STRAIGHT_TIME = 0;

@@ -20,7 +20,7 @@ public class Main {
         TURN_AROUND_TIME_MINUTES = (int) EventHandler.TURN_AROUND_TIME / 60;
         int frequency = EventHandler.Frequency;
 
-        int numRuns = 1;
+        int numRuns = 25;
 
         double globalPercentageDelay = 0;
         double globalMaxDelay = 0;
@@ -131,6 +131,9 @@ public class Main {
     public static void initTramEvents(EventHandler handler, int frequency, EndStop CSStop, EndStop PNRStop, LocalTime simulationStartTime) {
         double PNR = Math.ceil((17 + TURN_AROUND_TIME_MINUTES) / (60 / (double) frequency));
         double CS = Math.floor((17 + TURN_AROUND_TIME_MINUTES) / (60 / (double) frequency));
+System.out.println("Trams at CS"+ CS);
+        System.out.println("Trams at PNR"+ PNR);
+
         for (int i = 0; i < CS; i++) {
             LocalTime t = LocalTime.of(simulationStartTime.getHour(), simulationStartTime.getMinute(), simulationStartTime.getSecond());
             t = t.plusMinutes((i * 60 / frequency) - 1);
