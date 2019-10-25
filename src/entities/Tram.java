@@ -1,24 +1,8 @@
 package entities;
 
 import java.time.LocalTime;
-import java.util.List;
 
 public class Tram {
-
-
-    public Tram() {
-
-    }
-
-    public Tram(int tramNum, Stop currentStop, Stop nextStop, LocalTime departureTime) {
-        this.tramNum = tramNum;
-        this.currentStop = currentStop;
-        this.nextStop = nextStop;
-        this.departureTime = departureTime;
-        this.travelTime =0;
-        this.passengersNumber = 0;
-    }
-
     private static final int MAX_CAPACITY = 420;
     private int tramNum;
     private int direction;
@@ -32,10 +16,17 @@ public class Tram {
     private long travelTime;
     private int passengersNumber;
 
-    private boolean waiting; //
-
     LocalTime plannedArrivalEndStop;
     LocalTime plannedDepartureEndStop;
+
+    public Tram(int tramNum, Stop currentStop, Stop nextStop, LocalTime departureTime) {
+        this.tramNum = tramNum;
+        this.currentStop = currentStop;
+        this.nextStop = nextStop;
+        this.departureTime = departureTime;
+        this.travelTime = 0;
+        this.passengersNumber = 0;
+    }
 
     public static int getMaxCapacity() {
         return MAX_CAPACITY;
@@ -45,29 +36,17 @@ public class Tram {
         return tramNum;
     }
 
-    public void setTramNum(int tramNum) {
-        this.tramNum = tramNum;
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-
     public void setDirection(int direction) {
         this.direction = direction;
     }
 
-    public Stop getCurrentStop() {
-        return currentStop;
-    }
+    public Stop getCurrentStop() { return currentStop; }
 
     public void setCurrentStop(Stop currentStop) {
         this.currentStop = currentStop;
     }
 
-    public Stop getNextStop() {
-        return nextStop;
-    }
+    public Stop getNextStop() { return nextStop; }
 
     public void setNextStop(Stop nextStop) {
         this.nextStop = nextStop;
@@ -77,9 +56,7 @@ public class Tram {
         return travelTime;
     }
 
-    public void setTravelTime(long travelTime) {
-        this.travelTime = travelTime;
-    }
+    public void setTravelTime(long travelTime) { this.travelTime = travelTime; }
 
     public int getPassengersNumber() {
         return passengersNumber;
@@ -89,17 +66,7 @@ public class Tram {
         this.passengersNumber = passengersNumber;
     }
 
-    public boolean isWaiting() {
-        return waiting;
-    }
-
-    public void setWaiting(boolean waiting) {
-        this.waiting = waiting;
-    }
-
-    public LocalTime getDepartureTime() {
-        return departureTime;
-    }
+    public LocalTime getDepartureTime() { return departureTime; }
 
     public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
@@ -113,19 +80,7 @@ public class Tram {
         this.plannedArrivalTime = plannedArrivalTime;
     }
 
-    public LocalTime getPlannedArrivalEndStop() {
-        return plannedArrivalEndStop;
-    }
+    public void setPlannedArrivalEndStop(LocalTime plannedArrivalEndStop) { this.plannedArrivalEndStop = plannedArrivalEndStop; }
 
-    public void setPlannedArrivalEndStop(LocalTime plannedArrivalEndStop) {
-        this.plannedArrivalEndStop = plannedArrivalEndStop;
-    }
-
-    public LocalTime getPlannedDepartureEndStop() {
-        return plannedDepartureEndStop;
-    }
-
-    public void setPlannedDepartureEndStop(LocalTime plannedDepartureEndStop) {
-        this.plannedDepartureEndStop = plannedDepartureEndStop;
-    }
+    public void setPlannedDepartureEndStop(LocalTime plannedDepartureEndStop) { this.plannedDepartureEndStop = plannedDepartureEndStop; }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 
 public class TimeTableGenerator  {
 
-
     public static void generateTimeTable(EndStop endStop, LocalTime startTime, LocalTime endtime, int frequency, int offset,int turnaround )
     {
         List<LocalTime> plannedArrival = new ArrayList();
@@ -26,5 +25,4 @@ public class TimeTableGenerator  {
         endStop.setPlannedArrival(plannedArrival);
         endStop.setPlannedDeparture(plannedDeparture);
     }
-
 }

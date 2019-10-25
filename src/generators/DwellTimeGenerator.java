@@ -15,7 +15,5 @@ public class DwellTimeGenerator {
         } while (dwellTime < (d*0.8) || dwellTime > 1.6*d);
 
         return dwellTime;
-        //return d;
-        //return 0;
     }
 }

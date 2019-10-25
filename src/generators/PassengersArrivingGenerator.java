@@ -10,9 +10,10 @@ import java.util.Arrays;
 
 public class PassengersArrivingGenerator {
 
-    List<Passenger> generatePassengers(Stop stop){return null;}
+    public PassengersArrivingGenerator() { }
 
-    public PassengersArrivingGenerator() {
+    public static int getNumPassengers(Stop stop, LocalTime time) throws IOException {
+        return getNumPassengersValidation(stop,time,3);
     }
 
     public static int getNumPassengersValidation(Stop stop, LocalTime time, int valNumber) throws IOException {
@@ -38,43 +39,15 @@ public class PassengersArrivingGenerator {
         return k - 1;
     }
 
-    public static int getNumPassengers(Stop stop, LocalTime time) throws IOException {
-            return getNumPassengersValidation(stop,time,3);
-            /*double mean = getStopMean(stop, time);
-            double p = 1.0;
-            int k = 0;
-            int step = 600;
-            do {
-                k++;
-                p *= Math.random();
-                while (p < 1 && mean > 0) {
-                    if (mean > step) {
-                        p *= Math.exp(step);
-                        mean -= step;
-                    } else {
-                        p *= Math.exp(mean);
-                        mean = 0;
-                    }
-                }
-            } while (p > 1);
-
-            return k - 1;
-
-*/
-    }
-
-
     private static double getStopMeanForValidation(Stop stop, LocalTime time, int valNumber) throws IOException {
         double[][] means;
         String fileName = "validation" + valNumber + "In";
-
 
         if (stop.getStopNumber() >= 1 && stop.getStopNumber() < 9 || stop.getStopNumber() == 18){
             means = getMeans("src/files/validation/" + fileName + "B.txt");
         } else {
             means = getMeans("src/files/validation/" + fileName + "A.txt");
         }
-
 
         if (stop.getStopNumber() == 1 || stop.getStopNumber() == 18){
             return means[getTimePeriod(time)][0];
@@ -90,13 +63,11 @@ public class PassengersArrivingGenerator {
     private static double getStopMean(Stop stop, LocalTime time) throws IOException {
         double[][] means;
 
-
         if (stop.getStopNumber() >= 1 && stop.getStopNumber() < 9 || stop.getStopNumber() == 18){
             means = getMeans("src/files/meanValuesRouteB.txt");
         } else {
             means = getMeans("src/files/meanValuesRouteA.txt");
         }
-
 
         if (stop.getStopNumber() == 1 || stop.getStopNumber() == 18){
             return means[getTimePeriod(time)][0];
@@ -107,7 +78,6 @@ public class PassengersArrivingGenerator {
         } else {
             return means[getTimePeriod(time)][stop.getStopNumber()%10];
         }
-
     }
 
     private static double[][] getMeans(String path) throws IOException {
@@ -122,12 +92,12 @@ public class PassengersArrivingGenerator {
             String[] tmpStr = st.split(",");
             for (int i = 0; i < tmpStr.length; i++){
                 tmp[i] = Double.valueOf(tmpStr[i]);
-
             }
 
             means[counter] = tmp;
             counter++;
         }
+
         return means;
     }
 
@@ -158,6 +128,4 @@ public class PassengersArrivingGenerator {
 
         return 62;
     }
-
-
 }
