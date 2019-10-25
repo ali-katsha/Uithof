@@ -22,7 +22,7 @@ public class EventHandler {
     private static final LocalTime CALCULATION_START_TIME = LocalTime.of(7, 0, 0);
     private static final LocalTime CALCULATION_END_TIME = LocalTime.of(19, 0, 0);
 
-    public static final int Frequency = 2;
+    public static final int Frequency = 12;
     public static final long TURN_AROUND_TIME = 240;
 
     private static final int SWITCH_STRAIGHT_TIME = 0;
@@ -174,7 +174,7 @@ public class EventHandler {
             }
         }
 
-        long drivingTime = DrivingTimeGenerator.generateDrivingTime(stop, tram.getNextStop());
+        long drivingTime = DrivingTimeGenerator.generateDrivingTime(stop);
 
         if (PRINT)
             if (tram.getTramNum() == NUM || PRINT_ALL)
@@ -296,7 +296,7 @@ public class EventHandler {
                 eventQueue.add(switchEvent);
             }
 
-            long drivingTime = DrivingTimeGenerator.generateDrivingTime(stop, tram.getNextStop());
+            long drivingTime = DrivingTimeGenerator.generateDrivingTime(stop);
             if (PRINT)
                 if (tram.getTramNum() == NUM || PRINT_ALL)
                     System.out.println("Departure Switch, Tram:" + tram.getTramNum() + " Driving time " + drivingTime + " Station" + tram.getCurrentStop().getName());

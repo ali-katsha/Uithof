@@ -4,20 +4,14 @@ import entities.Stop;
 
 import java.util.Random;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
-import org.apache.commons.math3.distribution.NormalDistribution;
+
 
 public  class DrivingTimeGenerator {
 
-    public static long generateDrivingTime(Stop currentStop, Stop nextStop ){
-        Random rand = new Random();
-        int n = rand.nextInt(50);
+    public static long generateDrivingTime(Stop currentStop ){
+
+        // return (long)generateDrivingTimeValidation(currentStop);
         return (long)generateRealDrivingTime(currentStop);
-        /*if (n>25)
-        //return 10;
-            return (long)generateDrivingTimeValidation(currentStop);
-        else
-            //return 10;
-             return (long)generateDrivingTimeValidation(currentStop);*/
     }
 
     public static double generateRealDrivingTime(Stop currentStop){
